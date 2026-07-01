@@ -1,0 +1,37 @@
+export const defaultQuestions = [
+  {
+    questionText: "Đâu là giao thức truyền tải dữ liệu thời gian thực phổ biến nhất trong ứng dụng web?",
+    options: ["HTTP/1.1", "WebSockets", "SMTP", "FTP"],
+    correctAnswerIndex: 1,
+    timeLimit: 15,
+    points: 1000
+  },
+  {
+    questionText: "Thư viện Node.js nào có hiệu năng WebSocket cao nhất và tiêu thụ ít RAM nhất?",
+    options: ["Socket.io", "ws", "uWebSockets.js", "Express-WS"],
+    correctAnswerIndex: 2,
+    timeLimit: 15,
+    points: 1000
+  },
+  {
+    questionText: "Phương pháp render nào giúp tối ưu hóa danh sách cực lớn trong React?",
+    options: ["Virtual Scroll (List Virtualization)", "Client-side Pagination", "Infinite Scroll", "Lazy Loading"],
+    correctAnswerIndex: 0,
+    timeLimit: 20,
+    points: 1000
+  },
+  {
+    questionText: "Trong CSS, thuộc tính nào dưới đây được tối ưu hóa phần cứng (GPU) khi làm animation?",
+    options: ["width & height", "margin-left & margin-top", "transform & opacity", "top & left"],
+    correctAnswerIndex: 2,
+    timeLimit: 15,
+    points: 1000
+  },
+  {
+    questionText: "Quy tắc thiết kế nào khuyên chúng ta 'không nên tự ý viết các chức năng khi chưa thực sự cần thiết'?",
+    options: ["SOLID", "DRY", "YAGNI (You Aren't Gonna Need It)", "KISS"],
+    correctAnswerIndex: 2,
+    timeLimit: 20,
+    points: 1000
+  }
+];

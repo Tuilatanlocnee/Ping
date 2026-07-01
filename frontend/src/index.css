@@ -1,0 +1,340 @@
+/* Nhập font chữ Outfit từ Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  font-family: 'Outfit', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.9);
+
+  /* Bảng màu Design System (HSL) */
+  --bg-dark: hsl(224, 71%, 4%);
+  --bg-card: hsla(224, 71%, 8%, 0.7);
+  --bg-glass: rgba(255, 255, 255, 0.03);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-active: rgba(255, 255, 255, 0.2);
+  
+  --primary: hsl(263, 90%, 52%);
+  --primary-glow: hsla(263, 90%, 52%, 0.35);
+  --secondary: hsl(280, 80%, 50%);
+  
+  /* Các màu đáp án dạng Neon hiện đại */
+  --color-red: hsl(355, 100%, 60%);
+  --color-red-glow: hsla(355, 100%, 60%, 0.3);
+  --color-blue: hsl(205, 100%, 55%);
+  --color-blue-glow: hsla(205, 100%, 55%, 0.3);
+  --color-yellow: hsl(45, 100%, 50%);
+  --color-yellow-glow: hsla(45, 100%, 50%, 0.3);
+  --color-green: hsl(150, 90%, 45%);
+  --color-green-glow: hsla(150, 90%, 45%, 0.3);
+
+  --text-primary: #ffffff;
+  --text-muted: hsl(220, 20%, 65%);
+  
+  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --transition-fast: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, hsla(225, 39%, 25%, 0.2) 0, transparent 50%),
+    radial-gradient(at 100% 100%, hsla(262, 47%, 20%, 0.15) 0, transparent 50%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Các lớp tiện ích (Utility classes) */
+.glass-panel {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  border: 1px solid var(--border-glass);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  transition: var(--transition-smooth);
+}
+
+.glass-panel:hover {
+  border-color: var(--border-glass-active);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+}
+
+.neon-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  box-shadow: 0 0 15px var(--primary-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.neon-btn:hover {
+  background: hsl(263, 100%, 58%);
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px var(--primary-glow);
+}
+
+.neon-btn:active {
+  transform: translateY(1px);
+}
+
+/* Hiệu ứng xung động (pulse) cho PIN và các nút quan trọng */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.25);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+/* Tải trang mượt mà (Fade In) */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+/* CSS cho lưới màu của đáp án */
+.answers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .answers-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.answer-option {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  position: relative;
+  text-align: left;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.answer-option:hover {
+  transform: translateY(-3px) scale(1.01);
+}
+
+.answer-option:active {
+  transform: translateY(1px);
+}
+
+.answer-option.red {
+  background: linear-gradient(135deg, hsl(355, 90%, 50%), hsl(355, 100%, 45%));
+  box-shadow: 0 6px 20px var(--color-red-glow);
+}
+.answer-option.blue {
+  background: linear-gradient(135deg, hsl(205, 90%, 45%), hsl(205, 100%, 40%));
+  box-shadow: 0 6px 20px var(--color-blue-glow);
+}
+.answer-option.yellow {
+  background: linear-gradient(135deg, hsl(45, 95%, 45%), hsl(45, 100%, 40%));
+  box-shadow: 0 6px 20px var(--color-yellow-glow);
+}
+.answer-option.green {
+  background: linear-gradient(135deg, hsl(150, 80%, 40%), hsl(150, 90%, 35%));
+  box-shadow: 0 6px 20px var(--color-green-glow);
+}
+
+/* Các biểu tượng hình học cho đáp án giống Kahoot */
+.shape-icon {
+  margin-right: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  font-size: 1.1rem;
+}
+
+/* Tối ưu danh sách Lobby người chơi */
+.lobby-players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 10px;
+  width: 100%;
+}
+
+.lobby-player-tag {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 16px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  animation: fadeIn 0.3s ease;
+  transition: var(--transition-fast);
+}
+
+.lobby-player-tag:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   STUNNING 3D CUBE STYLES (Futuristic & Holographic Selection)
+   ========================================================================== */
+.scene3d {
+  width: 130px;
+  height: 130px;
+  perspective: 600px;
+  margin: 15px auto 25px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cube3d {
+  width: 90px;
+  height: 90px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: rotateCube 14s infinite linear;
+  transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+@keyframes rotateCube {
+  0% {
+    transform: rotateX(-16deg) rotateY(0deg);
+  }
+  100% {
+    transform: rotateX(-16deg) rotateY(360deg);
+  }
+}
+
+/* Hover over card pauses animation, scales and shifts angle of 3D cube */
+.glass-panel:hover .cube3d {
+  animation-play-state: paused;
+  transform: rotateX(15deg) rotateY(45deg) scale(1.12);
+}
+
+.cube-face {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  user-select: none;
+  transition: var(--transition-smooth);
+}
+
+/* Futuristic blueprint inner dashed border */
+.cube-face::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+/* Face positions */
+.cube-face.front  { transform: rotateY(  0deg) translateZ(45px); }
+.cube-face.back   { transform: rotateY(180deg) translateZ(45px); }
+.cube-face.right  { transform: rotateY( 90deg) translateZ(45px); }
+.cube-face.left   { transform: rotateY(-90deg) translateZ(45px); }
+.cube-face.top    { transform: rotateX( 90deg) translateZ(45px); }
+.cube-face.bottom { transform: rotateX(-90deg) translateZ(45px); }
+
+/* Host Cube color styling (Purple Glow) */
+.cube-host .cube-face {
+  border-color: rgba(162, 0, 255, 0.35);
+  background: hsla(280, 80%, 8%, 0.4);
+  box-shadow: inset 0 0 15px rgba(162, 0, 255, 0.25), 0 0 12px rgba(162, 0, 255, 0.15);
+}
+.cube-host .cube-face::before {
+  border-color: rgba(162, 0, 255, 0.25);
+}
+.glass-panel:hover .cube-host .cube-face {
+  border-color: rgba(162, 0, 255, 0.85);
+  box-shadow: inset 0 0 25px rgba(162, 0, 255, 0.55), 0 0 35px rgba(162, 0, 255, 0.45);
+}
+
+/* Player Cube color styling (Cyan Glow) */
+.cube-player .cube-face {
+  border-color: rgba(0, 191, 255, 0.35);
+  background: hsla(195, 80%, 6%, 0.4);
+  box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.25), 0 0 12px rgba(0, 191, 255, 0.15);
+}
+.cube-player .cube-face::before {
+  border-color: rgba(0, 191, 255, 0.25);
+}
+.glass-panel:hover .cube-player .cube-face {
+  border-color: rgba(0, 191, 255, 0.85);
+  box-shadow: inset 0 0 25px rgba(0, 191, 255, 0.55), 0 0 35px rgba(0, 191, 255, 0.45);
+}
+
