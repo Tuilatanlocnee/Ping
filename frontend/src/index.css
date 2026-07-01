@@ -335,3 +335,105 @@ body {
   box-shadow: inset 0 0 25px rgba(0, 191, 255, 0.55), 0 0 35px rgba(0, 191, 255, 0.45);
 }
 
+/* Home View Layout */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  padding: 20px;
+  text-align: center;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.home-card {
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+}
+
+/* Responsive styles for mobile viewports */
+@media (max-width: 600px) {
+  .home-container {
+    min-height: auto;
+    padding: 10px;
+  }
+  
+  .home-grid {
+    gap: 16px;
+  }
+  
+  .home-card {
+    padding: 20px 16px;
+    gap: 12px;
+  }
+  
+  .scene3d {
+    width: 80px;
+    height: 80px;
+    margin: 5px auto 10px auto;
+  }
+  
+  .cube3d {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .cube-face {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+  
+  .cube-face.front  { transform: rotateY(  0deg) translateZ(30px); }
+  .cube-face.back   { transform: rotateY(180deg) translateZ(30px); }
+  .cube-face.right  { transform: rotateY( 90deg) translateZ(30px); }
+  .cube-face.left   { transform: rotateY(-90deg) translateZ(30px); }
+  .cube-face.top    { transform: rotateX( 90deg) translateZ(30px); }
+  .cube-face.bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+  /* Tối ưu hóa các bảng hiển thị chung (glass-panel) trên mobile */
+  .glass-panel {
+    border-radius: 16px !important;
+    padding: 20px 16px !important;
+    margin: 15px auto !important;
+    width: 100% !important;
+  }
+
+  /* Tối ưu hóa cỡ chữ tiêu đề trên màn hình nhỏ */
+  h2 {
+    font-size: 1.6rem !important;
+  }
+  h3 {
+    font-size: 1.3rem !important;
+  }
+
+  /* Làm gọn các nút bấm trả lời trên điện thoại */
+  .answer-option {
+    padding: 16px 20px !important;
+    font-size: 1.15rem !important;
+    border-radius: 12px !important;
+    min-height: 80px !important;
+  }
+
+  .shape-icon {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.95rem !important;
+    margin-right: 12px !important;
+  }
+}
+
+
+

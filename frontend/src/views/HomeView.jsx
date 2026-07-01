@@ -79,32 +79,11 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
   };
 
   return (
-    <div className="fade-in" style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      minHeight: '80vh',
-      padding: '20px',
-      textAlign: 'center'
-    }}>
+    <div className="fade-in home-container">
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-        gap: '24px',
-        width: '100%',
-        maxWidth: '600px'
-      }}>
+      <div className="home-grid">
         {/* Lựa chọn Host */}
-        <div className="glass-panel" style={{
-          padding: '40px 30px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '20px',
-          cursor: 'pointer'
-        }} onClick={() => onSelectRole('HOST')}>
+        <div className="glass-panel home-card" onClick={() => onSelectRole('HOST')}>
           <div className="scene3d">
             <div className="cube3d cube-host">
               <div className="cube-face front">📺</div>
@@ -130,13 +109,7 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
         </div>
 
         {/* Lựa chọn Người chơi (Giao diện nhập trực tiếp) */}
-        <div className="glass-panel" style={{
-          padding: '40px 30px',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '20px'
-        }}>
+        <div className="glass-panel home-card" style={{ cursor: 'default' }}>
           <div className="scene3d">
             <div className="cube3d cube-player">
               <div className="cube-face front">🎮</div>
