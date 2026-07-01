@@ -305,11 +305,6 @@ wss.on('connection', (ws) => {
                 type: 'PLAYER_ANSWERED',
                 totalAnswers: room.answersReceived.size
               });
-
-              // Nếu tất cả người chơi đã trả lời xong, tự động kết thúc câu hỏi sớm để không phải chờ hết giờ
-              if (room.answersReceived.size === room.players.size) {
-                endQuestion(room);
-              }
             } else if (result && result.error) {
               sendJSON(ws, { type: 'ERROR', message: result.error });
             }
