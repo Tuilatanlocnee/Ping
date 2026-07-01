@@ -1,8 +1,5 @@
-/* Nhập font chữ Outfit từ Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
-
 :root {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Times New Roman', Times, Baskerville, Georgia, serif;
   line-height: 1.5;
   font-weight: 400;
 
