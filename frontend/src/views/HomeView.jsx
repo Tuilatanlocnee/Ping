@@ -182,7 +182,7 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div style={{
+                <div className="pin-verified-badge" style={{
                   background: 'rgba(0, 191, 255, 0.06)',
                   border: '1px solid rgba(0, 191, 255, 0.15)',
                   borderRadius: '10px',
