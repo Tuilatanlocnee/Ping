@@ -22,6 +22,8 @@ export default function PlayerView({
   const [streak, setStreak] = useState(0);
   const [correctAnswerIndex, setCorrectAnswerIndex] = useState(-1);
   const [finalRank, setFinalRank] = useState(0);
+  const [currentQuestionText, setCurrentQuestionText] = useState('');
+  const [currentOptions, setCurrentOptions] = useState([]);
 
   // Tự động kiểm tra mã PIN truyền qua URL query parameters (ví dụ quét QR có điền sẵn PIN)
   useEffect(() => {
@@ -74,6 +76,8 @@ export default function PlayerView({
 
       case 'NEW_QUESTION':
         setOptionsCount(payload.optionsCount || 4);
+        setCurrentQuestionText(payload.questionText || '');
+        setCurrentOptions(payload.options || []);
         setPlayerState('QUESTION');
         break;
 
@@ -385,32 +389,73 @@ export default function PlayerView({
         padding: '16px',
         width: '100%'
       }}>
-        <div style={{ marginBottom: '20px', fontSize: '1.1rem', color: 'var(--text-muted)' }}>
+        <div style={{ marginBottom: '15px', fontSize: '1.1rem', color: 'var(--text-muted)' }}>
           Nickname: <strong style={{ color: 'white' }}>{nickname}</strong>
         </div>
         
+        {/* Khối hiển thị câu hỏi cho người chơi */}
+        {currentQuestionText && (
+          <div className="glass-panel" style={{
+            width: '100%',
+            maxWidth: '900px',
+            padding: '30px 20px',
+            textAlign: 'center',
+            marginBottom: '20px',
+            border: '1px solid rgba(255,255,255,0.08)'
+          }}>
+            <h2 style={{ fontSize: '1.8rem', fontWeight: '700', lineHeight: '1.4', margin: 0 }}>
+              {currentQuestionText}
+            </h2>
+          </div>
+        )}
+
         <div className="answers-grid" style={{ 
-          height: '60vh', 
-          gridTemplateRows: optionsCount > 2 ? 'repeat(2, 1fr)' : '1fr',
-          maxHeight: '550px'
+          height: 'auto',
+          minHeight: '40vh',
+          maxHeight: 'none'
         }}>
-          {Array.from({ length: optionsCount }).map((_, idx) => (
-            <button 
-              key={idx} 
-              className={`answer-option ${colors[idx]}`}
-              onClick={() => handleAnswerSubmit(idx)}
-              style={{
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '3rem',
-                borderRadius: '20px'
-              }}
-            >
-              <span style={{ transform: 'scale(1.5)' }}>{letters[idx]}</span>
-            </button>
-          ))}
+          {currentOptions.length > 0 ? (
+            currentOptions.map((option, idx) => (
+              <button 
+                key={idx} 
+                className={`answer-option ${colors[idx]}`}
+                onClick={() => handleAnswerSubmit(idx)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  padding: '24px',
+                  fontSize: '1.3rem',
+                  borderRadius: '16px',
+                  width: '100%',
+                  minHeight: '100px'
+                }}
+              >
+                <span className="shape-icon" style={{ flexShrink: 0 }}>{letters[idx]}</span>
+                <span style={{ flex: 1, wordBreak: 'break-word', textAlign: 'left' }}>{option}</span>
+              </button>
+            ))
+          ) : (
+            // Dự phòng nếu không tải được text đáp án từ backend (hiển thị nút hình học lớn như cũ)
+            Array.from({ length: optionsCount }).map((_, idx) => (
+              <button 
+                key={idx} 
+                className={`answer-option ${colors[idx]}`}
+                onClick={() => handleAnswerSubmit(idx)}
+                style={{
+                  height: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '3rem',
+                  borderRadius: '20px',
+                  minHeight: '180px'
+                }}
+              >
+                <span style={{ transform: 'scale(1.5)' }}>{letters[idx]}</span>
+              </button>
+            ))
+          )}
         </div>
       </div>
     );
@@ -497,7 +542,7 @@ export default function PlayerView({
             </div>
           ) : (
             <div style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>
-              Đáp án đúng là: <strong style={{ color: 'white' }}>{colors[correctAnswerIndex] || 'Không xác định'}</strong>
+              Đáp án đúng là: <strong style={{ color: 'white' }}>{currentOptions[correctAnswerIndex] ? `${letters[correctAnswerIndex]} ${currentOptions[correctAnswerIndex]}` : (colors[correctAnswerIndex] || 'Không xác định')}</strong>
             </div>
           )}
 

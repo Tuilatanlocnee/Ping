@@ -375,12 +375,14 @@ function sendQuestion(room, questionIndex) {
     totalQuestions: room.questions.length
   });
 
-  // Player chỉ nhận được số lượng đáp án để hiển thị các nút màu bấm tương ứng, bảo mật đáp án
+  // Player nhận thêm nội dung câu hỏi và đáp án để hỗ trợ chơi từ xa (online)
   const playerPayload = {
     type: 'NEW_QUESTION',
     questionIndex,
     optionsCount: question.options.length,
-    timeLimit: question.timeLimit
+    timeLimit: question.timeLimit,
+    questionText: question.questionText,
+    options: question.options
   };
 
   broadcastToPlayers(room, playerPayload);
