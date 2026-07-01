@@ -157,12 +157,6 @@ export default function HostView({
   const handleDeleteQuiz = async (quizId, e) => {
     e.stopPropagation(); // Ngăn sự kiện click chọn quiz
     
-    // Không cho xóa bộ đề mặc định đầu tiên để phòng trống
-    if (quizId === 'default-tech-quiz') {
-      alert('Bộ đề mặc định hệ thống không được xóa để tránh lỗi thiếu câu hỏi.');
-      return;
-    }
-
     if (!confirm('Bạn có chắc chắn muốn xóa bộ đề câu hỏi này không?')) return;
 
     try {
@@ -432,22 +426,20 @@ export default function HostView({
                     Khởi Chạy Game ⚡
                   </button>
                   
-                  {quiz.id !== 'default-tech-quiz' && (
-                    <button 
-                      className="neon-btn" 
-                      onClick={(e) => handleDeleteQuiz(quiz.id, e)}
-                      style={{
-                        background: 'rgba(255, 69, 0, 0.1)',
-                        border: '1px solid var(--color-red)',
-                        color: 'var(--color-red)',
-                        boxShadow: 'none',
-                        fontSize: '0.9rem',
-                        padding: '8px 16px'
-                      }}
-                    >
-                      Xóa
-                    </button>
-                  )}
+                  <button 
+                    className="neon-btn" 
+                    onClick={(e) => handleDeleteQuiz(quiz.id, e)}
+                    style={{
+                      background: 'rgba(255, 69, 0, 0.1)',
+                      border: '1px solid var(--color-red)',
+                      color: 'var(--color-red)',
+                      boxShadow: 'none',
+                      fontSize: '0.9rem',
+                      padding: '8px 16px'
+                    }}
+                  >
+                    Xóa
+                  </button>
                 </div>
               </div>
             ))}
