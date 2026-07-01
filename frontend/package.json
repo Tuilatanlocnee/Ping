@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node -e \"const fs=require('fs'); const path=require('path'); const p1=path.resolve('../node_modules/vite/bin/vite.js'); const p2=path.resolve('./node_modules/vite/bin/vite.js'); const vitePath=fs.existsSync(p1)?p1:p2; require('child_process').fork(vitePath, ['build']).on('exit', process.exit)\"",
     "lint": "oxlint",
     "preview": "vite preview"
   },

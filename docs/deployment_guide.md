@@ -68,10 +68,10 @@ Vite React SPA chạy cực kỳ mượt mà trên Vercel. Chúng ta sẽ liên 
 2. Nhấn **Add New** -> chọn **Project**.
 3. Chọn Repository `Ping` và nhấn **Import**.
 4. Cấu hình các thông số dự án:
-   - **Framework Preset:** Chọn `Vite` (Vercel tự động phát hiện).
-   - **Root Directory:** Điền `frontend` (để Vercel tập trung build thư mục frontend).
-   - **Build Command:** `npm run build`
-   - **Output Directory:** `dist`
+    - **Framework Preset:** Chọn `Vite` (Vercel tự động phát hiện).
+    - **Root Directory:** Giữ nguyên mặc định là thư mục gốc `./` (KHÔNG điền `frontend`).
+    - **Build Command:** Điền `npm run build --prefix frontend`
+    - **Output Directory:** Điền `frontend/dist`
 5. Nhấn mở phần **Environment Variables** (Biến môi trường) để thêm cấu hình kết nối tới server Render của bạn:
    
    - **Tạo biến thứ nhất (REST API):**
