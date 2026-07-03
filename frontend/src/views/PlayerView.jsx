@@ -1,5 +1,33 @@
 import React, { useState, useEffect } from 'react';
 
+// Hàm băm tên người chơi để chọn ra avatar cố định và ngộ nghĩnh giống Kahoot
+const getAvatarByNickname = (name) => {
+  const avatars = [
+    { emoji: '🦊', label: 'Cáo Tinh Nghịch' },
+    { emoji: '🦄', label: 'Kỳ Lân Mộng Mơ' },
+    { emoji: '🐯', label: 'Hổ Dũng Mãnh' },
+    { emoji: '🐼', label: 'Gấu Trúc Lười Biếng' },
+    { emoji: '🐨', label: 'Koala Hiền Lành' },
+    { emoji: '🦁', label: 'Sư Tử Oai Vệ' },
+    { emoji: '🐸', label: 'Ếch Xanh Vui Nhộn' },
+    { emoji: '🐙', label: 'Bạch Tuộc Thông Thái' },
+    { emoji: '🦖', label: 'Khủng Long Bạo Chúa' },
+    { emoji: '🤖', label: 'Robot Công Nghệ' },
+    { emoji: '👽', label: 'Alien Bí An' },
+    { emoji: '🦉', label: 'Cú Đêm Thông Minh' },
+    { emoji: '🦥', label: 'Con Lười Nhàn Nhã' },
+    { emoji: '🦩', label: 'Hồng Hạc Kiêu Sa' },
+    { emoji: '🦫', label: 'Hải Ly Chăm Chỉ' }
+  ];
+  if (!name) return avatars[0];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % avatars.length;
+  return avatars[index];
+};
+
 /**
  * Giao diện chính của Người chơi (Player) chạy trên thiết bị di động/trình duyệt.
  * Vòng đời hiển thị: Join -> Lobby waiting -> Answer buttons -> Submitted -> Result -> Podium
@@ -333,27 +361,56 @@ export default function PlayerView({
 
   // 2. MÀN HÌNH CHỜ HOST BẮT ĐẦU (LOBBY)
   if (playerState === 'LOBBY') {
+    const avatar = getAvatarByNickname(nickname);
     return (
-      <div className="glass-panel fade-in player-card" style={{ textAlign: 'center', alignItems: 'center', gap: '24px' }}>
-        <div style={{ fontSize: '4rem', animation: 'pulse-glow 2s infinite ease-in-out', borderRadius: '50%', width: '90px', height: '90px', display: 'flex', alignItems: 'center', justifycontent: 'center', background: 'rgba(255,255,255,0.02)' }}>
-          🎮
+      <div className="glass-panel fade-in player-card" style={{ textAlign: 'center', alignItems: 'center', gap: '20px' }}>
+        <div className="floating-avatar">
+          {avatar.emoji}
         </div>
-        <h3 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Đã tham gia phòng chơi!</h3>
         
-        <div style={{ 
-          background: 'rgba(255,255,255,0.03)', 
-          padding: '15px 30px', 
-          borderRadius: '12px',
-          border: '1px solid rgba(255,255,255,0.05)',
-          width: '100%'
-        }}>
-          <div>Biệt danh: <strong style={{ color: 'var(--primary)' }}>{nickname}</strong></div>
-          <div style={{ marginTop: '5px' }}>Mã PIN: <strong>{pin}</strong></div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <h3 style={{ fontSize: '1.6rem', fontWeight: '800', margin: 0 }}>
+            Bạn đã vào game!
+          </h3>
+          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+            Nhân vật đại diện: <strong>{avatar.label}</strong>
+          </p>
         </div>
 
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: '1.5' }}>
-          Bạn đã sẵn sàng! Hãy nhìn lên màn hình lớn của Host để chờ đợi game bắt đầu.
-        </p>
+        <div style={{ 
+          background: 'rgba(255,255,255,0.03)', 
+          padding: '16px 20px', 
+          borderRadius: '16px',
+          border: '1px solid rgba(255,255,255,0.06)',
+          width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '8px'
+        }}>
+          <div style={{ fontSize: '1rem' }}>
+            Biệt danh: <strong style={{ color: 'var(--primary)', fontSize: '1.1rem' }}>{nickname}</strong>
+          </div>
+          <div style={{ width: '100%', height: '1px', background: 'rgba(255, 255, 255, 0.05)' }} />
+          <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+            Mã PIN phòng: <strong style={{ color: 'white' }}>{pin}</strong>
+          </div>
+        </div>
+
+        <div style={{ marginTop: '5px', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
+          <div style={{
+            fontSize: '1rem',
+            fontWeight: '600',
+            background: 'linear-gradient(to right, #ffd700, #ff8c00)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            animation: 'pulse-glow 1.5s infinite ease-in-out'
+          }}>
+            👀 Hãy xem tên bạn trên màn hình lớn!
+          </div>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.4', maxWidth: '300px' }}>
+            Đang chờ chủ phòng nhấn bắt đầu để khởi chạy game...
+          </p>
+        </div>
       </div>
     );
   }

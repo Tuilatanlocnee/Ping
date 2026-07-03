@@ -613,3 +613,41 @@ body {
     border-radius: 8px !important;
   }
 }
+
+/* Hiệu ứng trôi lơ lửng cho nhân vật avatar giống Kahoot */
+@keyframes float-avatar {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-16px) rotate(3deg);
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+.floating-avatar {
+  animation: float-avatar 2.6s infinite ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4.8rem;
+  width: 120px;
+  height: 120px;
+  background: hsla(263, 90%, 52%, 0.1);
+  border: 2px solid hsla(263, 90%, 52%, 0.25);
+  border-radius: 50%;
+  box-shadow: 0 0 20px hsla(263, 90%, 52%, 0.2), inset 0 0 15px hsla(263, 90%, 52%, 0.1);
+  user-select: none;
+  margin: 10px 0;
+}
+
+@media (max-width: 600px) {
+  .floating-avatar {
+    font-size: 3.8rem !important;
+    width: 95px !important;
+    height: 95px !important;
+    margin: 5px 0 !important;
+  }
+}
