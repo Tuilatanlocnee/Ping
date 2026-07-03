@@ -88,7 +88,7 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
               <div className="cube-face front">🎮</div>
               <div className="cube-face back">📱</div>
               <div className="cube-face right">💬</div>
-              <div className="cube-face left">⚡</div>
+              <div className="cube-face left">🕹️</div>
               <div className="cube-face top">⭐</div>
               <div className="cube-face bottom">🧠</div>
             </div>

@@ -423,7 +423,7 @@ export default function HostView({
 
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                   <button className="neon-btn" style={{ fontSize: '0.95rem', padding: '8px 20px' }}>
-                    Khởi Chạy Game ⚡
+                    Khởi Chạy Game 🎮
                   </button>
                   
                   <button 
