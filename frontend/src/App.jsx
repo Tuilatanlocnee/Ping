@@ -109,7 +109,7 @@ function App() {
             userSelect: 'none'
           }}
         >
-          <span>🚀</span>
+          <span>🎮</span>
           <span style={{
             background: 'linear-gradient(to right, #ffd700, #a200ff)',
             WebkitBackgroundClip: 'text',
@@ -119,7 +119,28 @@ function App() {
           </span>
         </div>
 
-        {role !== 'SELECT' && (
+        {role === 'SELECT' ? (
+          <button 
+            onClick={() => handleSelectRole('HOST')}
+            className="neon-btn"
+            style={{
+              padding: '8px 16px',
+              fontSize: '0.85rem',
+              background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+              boxShadow: '0 0 12px var(--primary-glow)',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              border: 'none',
+              color: 'white',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <span>📺</span> Tạo Phòng
+          </button>
+        ) : (
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem' }}>
             <span style={{
               width: '8px',

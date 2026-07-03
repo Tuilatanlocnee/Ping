@@ -80,36 +80,9 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
 
   return (
     <div className="fade-in home-container">
-
-      <div className="home-grid">
-        {/* Lựa chọn Host */}
-        <div className="glass-panel home-card" onClick={() => onSelectRole('HOST')}>
-          <div className="scene3d">
-            <div className="cube3d cube-host">
-              <div className="cube-face front">📺</div>
-              <div className="cube-face back">📊</div>
-              <div className="cube-face right">🏆</div>
-              <div className="cube-face left">📈</div>
-              <div className="cube-face top">💻</div>
-              <div className="cube-face bottom">⚙️</div>
-            </div>
-          </div>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Host</h2>
-          <p style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-            Tạo phòng chơi mới, phát đề trắc nghiệm và hiển thị bảng xếp hạng trực tiếp trên màn hình lớn.
-          </p>
-          <button className="neon-btn" style={{ 
-            marginTop: 'auto', 
-            width: '100%',
-            background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
-            boxShadow: '0 0 15px rgba(162, 0, 255, 0.3)'
-          }}>
-            Tạo Phòng Ngay
-          </button>
-        </div>
-
+      <div className="home-grid" style={{ maxWidth: '380px', margin: '0 auto', width: '100%' }}>
         {/* Lựa chọn Người chơi (Giao diện nhập trực tiếp) */}
-        <div className="glass-panel home-card" style={{ cursor: 'default' }}>
+        <div className="glass-panel home-card" style={{ cursor: 'default', width: '100%' }}>
           <div className="scene3d">
             <div className="cube3d cube-player">
               <div className="cube-face front">🎮</div>
@@ -120,10 +93,7 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
               <div className="cube-face bottom">🧠</div>
             </div>
           </div>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Người chơi</h2>
-          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-            Nhập mã PIN để tham gia phòng game của Host, trả lời câu hỏi và đua top.
-          </p>
+          {/* Đã xóa tiêu đề và mô tả người chơi */}
 
           {errorMsg && (
             <div style={{

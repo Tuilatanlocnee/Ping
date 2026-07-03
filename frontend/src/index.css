@@ -1,5 +1,5 @@
 :root {
-  font-family: 'Times New Roman', Times, Baskerville, Georgia, serif;
+  font-family: Arial, Helvetica, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -38,6 +38,11 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* Đồng bộ font chữ cho tất cả các phần tử form */
+button, input, select, textarea {
+  font-family: inherit;
 }
 
 body {
