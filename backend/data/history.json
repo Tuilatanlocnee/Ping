@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "id": "hist_1783066275979",
+    "playedAt": "2026-07-03T08:11:15.981Z",
+    "pin": "428500",
+    "quizTitle": "sfrtyui",
+    "totalPlayers": 5,
+    "podium": [
+      {
+        "nickname": "A",
+        "score": 836
+      },
+      {
+        "nickname": "Loc",
+        "score": 828
+      },
+      {
+        "nickname": "C",
+        "score": 736
+      }
+    ]
+  }
+]

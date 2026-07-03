@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // Hàm băm tên người chơi để chọn ra avatar cố định và ngộ nghĩnh giống Kahoot
 const getAvatarByNickname = (name) => {
@@ -28,6 +28,25 @@ const getAvatarByNickname = (name) => {
   return avatars[index];
 };
 
+// Hàm lấy màu sắc ngẫu nhiên nhưng cố định cho mỗi biệt danh
+const getColorsByNickname = (name) => {
+  const colorPalettes = [
+    { left: 'rgba(216, 122, 42, 0.45)', right: 'rgba(216, 122, 42, 0.15)' }, // Cam
+    { left: 'rgba(36, 113, 163, 0.45)', right: 'rgba(36, 113, 163, 0.15)' }, // Xanh dương
+    { left: 'rgba(30, 132, 73, 0.45)', right: 'rgba(30, 132, 73, 0.15)' },   // Xanh lá
+    { left: 'rgba(176, 58, 46, 0.45)', right: 'rgba(176, 58, 46, 0.15)' },   // Đỏ
+    { left: 'rgba(108, 52, 131, 0.45)', right: 'rgba(108, 52, 131, 0.15)' }, // Tím
+    { left: 'rgba(23, 165, 137, 0.45)', right: 'rgba(23, 165, 137, 0.15)' }  // Cyan
+  ];
+  if (!name) return colorPalettes[0];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % colorPalettes.length;
+  return colorPalettes[index];
+};
+
 /**
  * Giao diện chính của Người chơi (Player) chạy trên thiết bị di động/trình duyệt.
  * Vòng đời hiển thị: Join -> Lobby waiting -> Answer buttons -> Submitted -> Result -> Podium
@@ -36,12 +55,13 @@ export default function PlayerView({
   isConnected, 
   sendMessage, 
   lastMessage, 
-  onBackToHome 
+  onBackToHome,
+  joinedPlayer
 }) {
-  const [playerState, setPlayerState] = useState('JOIN'); // JOIN, LOBBY, QUESTION, SUBMITTED, RESULT, LEADERBOARD_WAIT, PODIUM
-  const [pin, setPin] = useState('');
-  const [nickname, setNickname] = useState('');
-  const [pinVerified, setPinVerified] = useState(false);
+  const [playerState, setPlayerState] = useState(joinedPlayer ? 'LOBBY' : 'JOIN'); // JOIN, LOBBY, QUESTION, SUBMITTED, RESULT, LEADERBOARD_WAIT, PODIUM
+  const [pin, setPin] = useState(joinedPlayer ? joinedPlayer.pin : '');
+  const [nickname, setNickname] = useState(joinedPlayer ? joinedPlayer.nickname : '');
+  const [pinVerified, setPinVerified] = useState(joinedPlayer ? true : false);
   const [errorMsg, setErrorMsg] = useState('');
   const [optionsCount, setOptionsCount] = useState(4);
   const [pointsGained, setPointsGained] = useState(0);
@@ -52,6 +72,148 @@ export default function PlayerView({
   const [finalRank, setFinalRank] = useState(0);
   const [currentQuestionText, setCurrentQuestionText] = useState('');
   const [currentOptions, setCurrentOptions] = useState([]);
+  const [lobbyPlayers, setLobbyPlayers] = useState(joinedPlayer ? (joinedPlayer.playerList || []) : []);
+  const containerRef = useRef(null);
+  const [bubbles, setBubbles] = useState([]);
+
+  // Đồng bộ hóa trạng thái khi prop joinedPlayer thay đổi từ ngoài vào
+  useEffect(() => {
+    if (joinedPlayer) {
+      setPin(joinedPlayer.pin);
+      setNickname(joinedPlayer.nickname);
+      setLobbyPlayers(joinedPlayer.playerList || []);
+      setPinVerified(true);
+      setPlayerState('LOBBY');
+    }
+  }, [joinedPlayer]);
+
+  // Cập nhật bubbles mỗi khi danh sách người chơi trong phòng thay đổi
+  useEffect(() => {
+    setBubbles(prev => {
+      const updated = [];
+      const prevMap = new Map(prev.map(b => [b.nickname, b]));
+
+      lobbyPlayers.forEach(nick => {
+        if (prevMap.has(nick)) {
+          updated.push(prevMap.get(nick));
+        } else {
+          // Tạo hướng và tốc độ trôi nổi ngẫu nhiên chậm kiểu vũ trụ
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 0.4 + Math.random() * 0.5;
+          // Chọn vị trí xuất phát ngẫu nhiên rộng hơn trên toàn màn hình
+          const startX = 100 + Math.random() * (window.innerWidth - 200 || 500);
+          const startY = 150 + Math.random() * (window.innerHeight - 300 || 400);
+          updated.push({
+            nickname: nick,
+            x: startX,
+            y: startY,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: 90
+          });
+        }
+      });
+      return updated;
+    });
+  }, [lobbyPlayers]);
+
+  // Vòng lặp cập nhật vật lý va chạm dội tường (60fps)
+  useEffect(() => {
+    let animationFrameId;
+
+    const updatePhysics = () => {
+      setBubbles(prev => {
+        if (!containerRef.current || prev.length === 0) return prev;
+        const rect = containerRef.current.getBoundingClientRect();
+        const width = rect.width || 600;
+        const height = rect.height || 400;
+
+        // 1. Cập nhật vị trí tạm thời dựa trên vận tốc và dội tường biên
+        let nextBubbles = prev.map(b => {
+          let newX = b.x + b.vx;
+          let newY = b.y + b.vy;
+          let newVx = b.vx;
+          let newVy = b.vy;
+
+          const radius = b.size / 2;
+
+          // Va chạm với cạnh trái/phải
+          if (newX - radius < 0) {
+            newX = radius;
+            newVx = Math.abs(b.vx); // dội sang phải
+          } else if (newX + radius > width) {
+            newX = width - radius;
+            newVx = -Math.abs(b.vx); // dội sang trái
+          }
+
+          // Va chạm với cạnh trên/dưới
+          if (newY - radius < 0) {
+            newY = radius;
+            newVy = Math.abs(b.vy); // dội xuống dưới
+          } else if (newY + radius > height) {
+            newY = height - radius;
+            newVy = -Math.abs(b.vy); // dội lên trên
+          }
+
+          return {
+            ...b,
+            x: newX,
+            y: newY,
+            vx: newVx,
+            vy: newVy
+          };
+        });
+
+        // 2. Xử lý va chạm đàn hồi chéo giữa các bong bóng (để không chồng chéo nhau)
+        for (let i = 0; i < nextBubbles.length; i++) {
+          for (let j = i + 1; j < nextBubbles.length; j++) {
+            const b1 = nextBubbles[i];
+            const b2 = nextBubbles[j];
+
+            const dx = b2.x - b1.x;
+            const dy = b2.y - b1.y;
+            const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+            const minDist = b1.size / 2 + b2.size / 2;
+
+            if (distance < minDist) {
+              const overlap = minDist - distance;
+              // Vectơ đơn vị hướng pháp tuyến va chạm
+              const nx = dx / distance;
+              const ny = dy / distance;
+
+              // Đẩy 2 bong bóng xa nhau ra 50% mỗi bên để giải phóng chồng lấp
+              nextBubbles[i].x -= nx * overlap * 0.5;
+              nextBubbles[i].y -= ny * overlap * 0.5;
+              nextBubbles[j].x += nx * overlap * 0.5;
+              nextBubbles[j].y += ny * overlap * 0.5;
+
+              // Vận tốc tương đối
+              const kx = nextBubbles[i].vx - nextBubbles[j].vx;
+              const ky = nextBubbles[i].vy - nextBubbles[j].vy;
+
+              // Tích vô hướng vận tốc tương đối và vectơ pháp tuyến đơn vị
+              const vn = kx * nx + ky * ny;
+
+              // Chỉ phản ứng nếu 2 vật đang di chuyển lại gần nhau
+              if (vn > 0) {
+                // Bảo toàn động lượng với khối lượng bằng nhau (trao đổi vận tốc dọc pháp tuyến)
+                nextBubbles[i].vx -= vn * nx;
+                nextBubbles[i].vy -= vn * ny;
+                nextBubbles[j].vx += vn * nx;
+                nextBubbles[j].vy += vn * ny;
+              }
+            }
+          }
+        }
+
+        return nextBubbles;
+      });
+      animationFrameId = requestAnimationFrame(updatePhysics);
+    };
+
+    animationFrameId = requestAnimationFrame(updatePhysics);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, []);
 
   // Tự động kiểm tra mã PIN truyền qua URL query parameters (ví dụ quét QR có điền sẵn PIN)
   useEffect(() => {
@@ -90,8 +252,13 @@ export default function PlayerView({
       case 'JOIN_SUCCESS':
         setPin(payload.pin);
         setNickname(payload.nickname);
+        setLobbyPlayers(payload.playerList || []);
         setPlayerState('LOBBY');
         setErrorMsg('');
+        break;
+
+      case 'LOBBY_PLAYERS_UPDATED':
+        setLobbyPlayers(payload.playerList || []);
         break;
 
       case 'JOIN_FAILED':
@@ -359,57 +526,72 @@ export default function PlayerView({
     );
   }
 
-  // 2. MÀN HÌNH CHỜ HOST BẮT ĐẦU (LOBBY)
+  // 2. MÀN HÌNH CHỜ HOST BẮT ĐẦU (LOBBY VŨ TRỤ TRÔI NỔI TOÀN MÀN HÌNH)
   if (playerState === 'LOBBY') {
     const avatar = getAvatarByNickname(nickname);
     return (
-      <div className="glass-panel fade-in player-card" style={{ textAlign: 'center', alignItems: 'center', gap: '20px' }}>
-        <div className="floating-avatar">
-          {avatar.emoji}
-        </div>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <h3 style={{ fontSize: '1.6rem', fontWeight: '800', margin: 0 }}>
-            Bạn đã vào game!
-          </h3>
-          <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-            Nhân vật đại diện: <strong>{avatar.label}</strong>
-          </p>
-        </div>
+      <div 
+        ref={containerRef}
+        className="space-lobby-container full-screen"
+      >
+        <div className="space-stars"></div>
+        <div className="space-nebula"></div>
 
-        <div style={{ 
-          background: 'rgba(255,255,255,0.03)', 
-          padding: '16px 20px', 
-          borderRadius: '16px',
-          border: '1px solid rgba(255,255,255,0.06)',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '8px'
-        }}>
-          <div style={{ fontSize: '1rem' }}>
-            Biệt danh: <strong style={{ color: 'var(--primary)', fontSize: '1.1rem' }}>{nickname}</strong>
-          </div>
-          <div style={{ width: '100%', height: '1px', background: 'rgba(255, 255, 255, 0.05)' }} />
-          <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-            Mã PIN phòng: <strong style={{ color: 'white' }}>{pin}</strong>
-          </div>
-        </div>
 
-        <div style={{ marginTop: '5px', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
-          <div style={{
-            fontSize: '1rem',
-            fontWeight: '600',
-            background: 'linear-gradient(to right, #ffd700, #ff8c00)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            animation: 'pulse-glow 1.5s infinite ease-in-out'
+
+        {/* Render bong bóng người chơi bay lơ lửng */}
+        {bubbles.length === 0 ? (
+          <div style={{ 
+            position: 'absolute', 
+            top: '50%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)', 
+            color: 'var(--text-muted)',
+            textAlign: 'center',
+            zIndex: 1020
           }}>
-            👀 Hãy xem tên bạn trên màn hình lớn!
+            <div style={{ fontSize: '2.5rem', animation: 'space-twinkle 1s infinite' }}>🛸</div>
+            Đang kết nối vũ trụ...
           </div>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', lineHeight: '1.4', maxWidth: '300px' }}>
-            Đang chờ chủ phòng nhấn bắt đầu để khởi chạy game...
-          </p>
+        ) : (
+          bubbles.map((b) => {
+            const pAvatar = getAvatarByNickname(b.nickname);
+            const pColors = getColorsByNickname(b.nickname);
+            const isMe = b.nickname === nickname;
+            const radius = b.size / 2;
+
+            return (
+              <div 
+                key={b.nickname}
+                className={`cosmic-player-bubble ${isMe ? 'cosmic-player-bubble-me' : ''}`}
+                style={{
+                  left: `${b.x - radius}px`,
+                  top: `${b.y - radius}px`,
+                  width: `${b.size}px`,
+                  height: `${b.size}px`,
+                  background: `linear-gradient(135deg, ${pColors.left}, ${pColors.right})`
+                }}
+              >
+                <span className="cosmic-player-emoji">{pAvatar.emoji}</span>
+                <span className="cosmic-player-name">{b.nickname} {isMe && '(Bạn)'}</span>
+              </div>
+            );
+          })
+        )}
+
+        {/* Khối lớp phủ thông tin số lượng phi hành gia ở chân màn hình */}
+        <div style={{
+          position: 'absolute',
+          bottom: '30px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 1050,
+          color: 'rgba(255,255,255,0.65)',
+          fontSize: '0.95rem',
+          textShadow: '0 2px 4px rgba(0,0,0,0.8)',
+          pointerEvents: 'none'
+        }}>
+          Hiện có <strong>{lobbyPlayers.length}</strong> phi hành gia đang lơ lửng trong vũ trụ này
         </div>
       </div>
     );

@@ -274,8 +274,13 @@ wss.on('connection', (ws) => {
 
             const room = gameManager.getRoom(pin);
             
-            // Phản hồi cho Player tham gia thành công
-            sendJSON(ws, { type: 'JOIN_SUCCESS', pin, nickname: cleanNick });
+            // Phản hồi cho Player tham gia thành công kèm danh sách người chơi hiện tại
+            sendJSON(ws, { 
+              type: 'JOIN_SUCCESS', 
+              pin, 
+              nickname: cleanNick,
+              playerList: Array.from(room.players.keys())
+            });
             
             // Gửi thông báo cho Host để cập nhật danh sách lobby
             if (room.hostSocket && room.hostSocket.readyState === WebSocket.OPEN) {
@@ -286,6 +291,13 @@ wss.on('connection', (ws) => {
                 playerList: Array.from(room.players.keys())
               });
             }
+
+            // Gửi danh sách người chơi cập nhật cho tất cả người chơi trong phòng chờ
+            broadcastToPlayers(room, {
+              type: 'LOBBY_PLAYERS_UPDATED',
+              playerList: Array.from(room.players.keys())
+            });
+
             console.log(`[Player] ${cleanNick} tham gia phòng ${pin}`);
           }
           break;
@@ -333,11 +345,19 @@ wss.on('connection', (ws) => {
       gameManager.leaveRoom(ws.roomPin, ws.nickname);
       
       const room = gameManager.getRoom(ws.roomPin);
-      if (room && room.hostSocket && room.hostSocket.readyState === WebSocket.OPEN) {
-        sendJSON(room.hostSocket, {
-          type: 'PLAYER_LEFT',
-          nickname: ws.nickname,
-          totalPlayers: room.players.size,
+      if (room) {
+        if (room.hostSocket && room.hostSocket.readyState === WebSocket.OPEN) {
+          sendJSON(room.hostSocket, {
+            type: 'PLAYER_LEFT',
+            nickname: ws.nickname,
+            totalPlayers: room.players.size,
+            playerList: Array.from(room.players.keys())
+          });
+        }
+
+        // Gửi danh sách người chơi cập nhật cho tất cả người chơi còn lại trong phòng chờ
+        broadcastToPlayers(room, {
+          type: 'LOBBY_PLAYERS_UPDATED',
           playerList: Array.from(room.players.keys())
         });
       }

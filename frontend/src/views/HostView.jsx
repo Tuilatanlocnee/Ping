@@ -1,5 +1,52 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+// Hàm băm tên người chơi để chọn ra avatar cố định và ngộ nghĩnh giống Kahoot
+const getAvatarByNickname = (name) => {
+  const avatars = [
+    { emoji: '🦊', label: 'Cáo Tinh Nghịch' },
+    { emoji: '🦄', label: 'Kỳ Lân Mộng Mơ' },
+    { emoji: '🐯', label: 'Hổ Dũng Mãnh' },
+    { emoji: '🐼', label: 'Gấu Trúc Lười Biếng' },
+    { emoji: '🐨', label: 'Koala Hiền Lành' },
+    { emoji: '🦁', label: 'Sư Tử Oai Vệ' },
+    { emoji: '🐸', label: 'Ếch Xanh Vui Nhộn' },
+    { emoji: '🐙', label: 'Bạch Tuộc Thông Thái' },
+    { emoji: '🦖', label: 'Khủng Long Bạo Chúa' },
+    { emoji: '🤖', label: 'Robot Công Nghệ' },
+    { emoji: '👽', label: 'Alien Bí An' },
+    { emoji: '🦉', label: 'Cú Đêm Thông Minh' },
+    { emoji: '🦥', label: 'Con Lười Nhàn Nhã' },
+    { emoji: '🦩', label: 'Hồng Hạc Kiêu Sa' },
+    { emoji: '🦫', label: 'Hải Ly Chăm Chỉ' }
+  ];
+  if (!name) return avatars[0];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % avatars.length;
+  return avatars[index];
+};
+
+// Hàm lấy màu sắc ngẫu nhiên nhưng cố định cho mỗi biệt danh
+const getColorsByNickname = (name) => {
+  const colorPalettes = [
+    { left: 'rgba(216, 122, 42, 0.45)', right: 'rgba(216, 122, 42, 0.15)' }, // Cam
+    { left: 'rgba(36, 113, 163, 0.45)', right: 'rgba(36, 113, 163, 0.15)' }, // Xanh dương
+    { left: 'rgba(30, 132, 73, 0.45)', right: 'rgba(30, 132, 73, 0.15)' },   // Xanh lá
+    { left: 'rgba(176, 58, 46, 0.45)', right: 'rgba(176, 58, 46, 0.15)' },   // Đỏ
+    { left: 'rgba(108, 52, 131, 0.45)', right: 'rgba(108, 52, 131, 0.15)' }, // Tím
+    { left: 'rgba(23, 165, 137, 0.45)', right: 'rgba(23, 165, 137, 0.15)' }  // Cyan
+  ];
+  if (!name) return colorPalettes[0];
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % colorPalettes.length;
+  return colorPalettes[index];
+};
+
 /**
  * Giao diện chính của Host (Người điều phối game)
  * Quản lý vòng đời hiển thị: Dashboard -> Lobby -> Question -> Result -> Leaderboard -> Podium
@@ -19,6 +66,136 @@ export default function HostView({
   
   const [players, setPlayers] = useState([]);
   const [totalPlayers, setTotalPlayers] = useState(0);
+  const containerRef = useRef(null);
+  const [bubbles, setBubbles] = useState([]);
+
+  // Cập nhật bubbles mỗi khi danh sách người chơi phòng chờ thay đổi
+  useEffect(() => {
+    setBubbles(prev => {
+      const updated = [];
+      const prevMap = new Map(prev.map(b => [b.nickname, b]));
+
+      players.forEach(nick => {
+        if (prevMap.has(nick)) {
+          updated.push(prevMap.get(nick));
+        } else {
+          // Tạo hướng và tốc độ trôi nổi ngẫu nhiên chậm kiểu vũ trụ
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 0.4 + Math.random() * 0.5;
+          // Chọn vị trí xuất phát ngẫu nhiên rộng hơn trên toàn màn hình
+          const startX = 100 + Math.random() * (window.innerWidth - 200 || 600);
+          const startY = 150 + Math.random() * (window.innerHeight - 300 || 400);
+          updated.push({
+            nickname: nick,
+            x: startX,
+            y: startY,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: 90
+          });
+        }
+      });
+      return updated;
+    });
+  }, [players]);
+
+  // Vòng lặp cập nhật vật lý dội tường (60fps) cho màn hình Host
+  useEffect(() => {
+    let animationFrameId;
+
+    const updatePhysics = () => {
+      setBubbles(prev => {
+        if (!containerRef.current || prev.length === 0) return prev;
+        const rect = containerRef.current.getBoundingClientRect();
+        const width = rect.width || 800;
+        const height = rect.height || 400;
+
+        // 1. Cập nhật vị trí tạm thời dựa trên vận tốc và dội tường biên
+        let nextBubbles = prev.map(b => {
+          let newX = b.x + b.vx;
+          let newY = b.y + b.vy;
+          let newVx = b.vx;
+          let newVy = b.vy;
+
+          const radius = b.size / 2;
+
+          // Va chạm dội tường trái/phải
+          if (newX - radius < 0) {
+            newX = radius;
+            newVx = Math.abs(b.vx);
+          } else if (newX + radius > width) {
+            newX = width - radius;
+            newVx = -Math.abs(b.vx);
+          }
+
+          // Va chạm dội tường trên/dưới
+          if (newY - radius < 0) {
+            newY = radius;
+            newVy = Math.abs(b.vy);
+          } else if (newY + radius > height) {
+            newY = height - radius;
+            newVy = -Math.abs(b.vy);
+          }
+
+          return {
+            ...b,
+            x: newX,
+            y: newY,
+            vx: newVx,
+            vy: newVy
+          };
+        });
+
+        // 2. Xử lý va chạm đàn hồi chéo giữa các bong bóng (để không chồng chéo nhau)
+        for (let i = 0; i < nextBubbles.length; i++) {
+          for (let j = i + 1; j < nextBubbles.length; j++) {
+            const b1 = nextBubbles[i];
+            const b2 = nextBubbles[j];
+
+            const dx = b2.x - b1.x;
+            const dy = b2.y - b1.y;
+            const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+            const minDist = b1.size / 2 + b2.size / 2;
+
+            if (distance < minDist) {
+              const overlap = minDist - distance;
+              // Vectơ đơn vị hướng pháp tuyến va chạm
+              const nx = dx / distance;
+              const ny = dy / distance;
+
+              // Đẩy 2 bong bóng xa nhau ra 50% mỗi bên để giải phóng chồng lấp
+              nextBubbles[i].x -= nx * overlap * 0.5;
+              nextBubbles[i].y -= ny * overlap * 0.5;
+              nextBubbles[j].x += nx * overlap * 0.5;
+              nextBubbles[j].y += ny * overlap * 0.5;
+
+              // Vận tốc tương đối
+              const kx = nextBubbles[i].vx - nextBubbles[j].vx;
+              const ky = nextBubbles[i].vy - nextBubbles[j].vy;
+
+              // Tích vô hướng vận tốc tương đối và vectơ pháp tuyến đơn vị
+              const vn = kx * nx + ky * ny;
+
+              // Chỉ phản ứng nếu 2 vật đang di chuyển lại gần nhau
+              if (vn > 0) {
+                // Bảo toàn động lượng với khối lượng bằng nhau (trao đổi vận tốc dọc pháp tuyến)
+                nextBubbles[i].vx -= vn * nx;
+                nextBubbles[i].vy -= vn * ny;
+                nextBubbles[j].vx += vn * nx;
+                nextBubbles[j].vy += vn * ny;
+              }
+            }
+          }
+        }
+
+        return nextBubbles;
+      });
+      animationFrameId = requestAnimationFrame(updatePhysics);
+    };
+
+    animationFrameId = requestAnimationFrame(updatePhysics);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, []);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
@@ -246,8 +423,18 @@ export default function HostView({
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: '30px' }}>
-        <h2 style={{ fontSize: '3rem', fontWeight: '800', background: 'linear-gradient(to right, #ffd700, #ff8c00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-          🏆 Bảng Vinh Danh 🏆
+        <h2 style={{ fontSize: '3rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '15px', margin: 0 }}>
+          <span>🏆</span>
+          <span style={{ 
+            background: 'linear-gradient(to right, #ffd700, #ff8c00)', 
+            WebkitBackgroundClip: 'text', 
+            backgroundClip: 'text', 
+            color: 'transparent',
+            WebkitTextFillColor: 'transparent' 
+          }}>
+            Bảng Vinh Danh
+          </span>
+          <span>🏆</span>
         </h2>
         
         <div style={{
@@ -449,128 +636,179 @@ export default function HostView({
     );
   }
 
-  // 2. MÀN HÌNH PHÒNG CHỜ (LOBBY) - TÍCH HỢP QR CODE
+  // 2. MÀN HÌNH PHÒNG CHỜ (LOBBY VŨ TRỤ TOÀN MÀN HÌNH) - TÍCH HỢP QR CODE
   if (hostState === 'LOBBY') {
     // Địa chỉ đầy đủ để người chơi di động quét và truy cập trực tiếp kèm PIN
     const joinUrl = `${window.location.protocol}//${window.location.hostname}${window.location.port ? ':' + window.location.port : ''}/?pin=${pin}`;
     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(joinUrl)}`;
 
     return (
-      <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: '30px', padding: '20px' }}>
-        
-        {/* Khối hiển thị mã PIN và mã QR song song bằng flexbox */}
+      <div 
+        ref={containerRef}
+        className="space-lobby-container full-screen"
+      >
+        <div className="space-stars"></div>
+        <div className="space-nebula"></div>
+
+        {/* BẢNG ĐIỀU HÀNH TRUNG TÂM TÍCH HỢP TOÀN BỘ (PIN + QR + ĐIỀU KHIỂN) */}
         <div style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)', // Căn giữa tuyệt đối ngang dọc
+          zIndex: 1050,
+          background: 'rgba(0, 0, 0, 0.45)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '28px',
+          padding: '30px 40px',
           display: 'flex',
-          flexWrap: 'wrap',
-          gap: '30px',
-          justifyContent: 'center',
-          alignItems: 'stretch',
-          width: '100%',
-          maxWidth: '850px'
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '24px',
+          boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5)',
+          width: '90%',
+          maxWidth: '560px'
         }}>
-          {/* Cột mã PIN */}
-          <div className="glass-panel pulse-glow" style={{
-            padding: '30px 50px',
+          {/* Phần 1: Mã PIN (Trên cùng của card) */}
+          <div style={{
+            width: '100%',
             textAlign: 'center',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            flex: '1 1 350px',
-            background: 'linear-gradient(135deg, var(--bg-card), rgba(255, 255, 255, 0.01))'
+            paddingBottom: '16px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
           }}>
-            <div style={{ fontSize: '1.2rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '2px', marginBottom: '10px' }}>
-              Mã PIN phòng chơi
-            </div>
-            <div style={{ fontSize: '5.5rem', fontWeight: '800', color: 'white', letterSpacing: '4px', lineHeight: '1.1' }}>
-              {pin}
+            <div style={{ fontSize: '3.6rem', fontWeight: '900', color: 'white', letterSpacing: '4px', margin: 0, lineHeight: 1.1 }}>
+              PIN: <span style={{ color: '#ffd700' }}>{pin}</span>
             </div>
           </div>
 
-          {/* Cột mã QR Code quét tham gia nhanh */}
-          <div className="glass-panel" style={{
-            padding: '24px 30px',
-            textAlign: 'center',
+          {/* Phần 2: Nội dung QR và Điều khiển (Dưới mã PIN, xếp song song) */}
+          <div style={{
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '12px',
-            flex: '0 1 260px',
-            background: 'rgba(255, 255, 255, 0.02)'
+            width: '100%',
+            gap: '40px',
+            alignItems: 'center'
           }}>
+            {/* Cột trái: QR Code */}
             <div style={{
-              background: 'white',
-              padding: '10px',
-              borderRadius: '12px',
-              display: 'inline-flex',
+              display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: '0 0 15px rgba(255, 255, 255, 0.1)'
+              gap: '12px',
+              flex: '1'
             }}>
-              <img 
-                src={qrUrl} 
-                alt="QR Code phòng chơi" 
-                style={{ width: '150px', height: '150px', display: 'block' }}
-                loading="lazy"
-              />
+              <div style={{
+                background: 'white',
+                padding: '10px',
+                borderRadius: '12px',
+                boxShadow: '0 0 15px rgba(255, 255, 255, 0.1)'
+              }}>
+                <img 
+                  src={qrUrl} 
+                  alt="QR Code phòng chơi" 
+                  style={{ width: '130px', height: '130px', display: 'block' }}
+                  loading="lazy"
+                />
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', fontWeight: 'bold' }}>
+                📸 Quét để vào nhanh!
+              </div>
             </div>
-            <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: '500' }}>
-              📸 Quét mã để vào game nhanh!
-            </div>
-          </div>
-        </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', maxWidth: '850px', alignItems: 'center' }}>
-          <div style={{ fontSize: '1.5rem', fontWeight: '600' }}>
-            👥 Người chơi tham gia: <span style={{ color: 'var(--primary)', fontSize: '2rem', fontWeight: '800' }}>{totalPlayers}</span>
-          </div>
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button 
-              className="neon-btn" 
-              onClick={handleStartGame}
-              disabled={totalPlayers === 0}
-              style={{ 
-                opacity: totalPlayers === 0 ? 0.6 : 1,
-                cursor: totalPlayers === 0 ? 'not-allowed' : 'pointer'
-              }}
-            >
-              Bắt đầu trò chơi
-            </button>
-            <button 
-              className="neon-btn" 
-              onClick={handleCancelRoom}
-              style={{
-                background: 'transparent',
-                border: '1px solid rgba(255,255,255,0.1)',
-                boxShadow: 'none'
-              }}
-            >
-              Hủy Phòng
-            </button>
-          </div>
-        </div>
+            {/* Đường ngăn cách dọc tinh tế */}
+            <div style={{ width: '1px', height: '140px', background: 'rgba(255, 255, 255, 0.1)' }}></div>
 
-        <div className="glass-panel" style={{
-          width: '100%',
-          maxWidth: '850px',
-          padding: '30px',
-          minHeight: '200px'
-        }}>
-          {totalPlayers === 0 ? (
-            <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '50px 0' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '10px' }}>⏳</div>
-              Đang chờ mọi người tham gia phòng...
-            </div>
-          ) : (
-            <div className="lobby-players-grid">
-              {players.map((nick) => (
-                <div key={nick} className="lobby-player-tag">
-                  {nick}
+            {/* Cột phải: Thông số người chơi & Cụm nút bấm */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '16px',
+              flex: '1.2'
+            }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                  Người chơi tham gia:
                 </div>
-              ))}
+                <div style={{ fontSize: '2.8rem', fontWeight: '900', color: 'var(--primary)', margin: '4px 0 0 0', lineHeight: 1 }}>
+                  {totalPlayers}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+                <button 
+                  className="neon-btn" 
+                  onClick={handleStartGame}
+                  disabled={totalPlayers === 0}
+                  style={{ 
+                    width: '100%',
+                    opacity: totalPlayers === 0 ? 0.6 : 1,
+                    cursor: totalPlayers === 0 ? 'not-allowed' : 'pointer',
+                    fontSize: '0.9rem',
+                    padding: '10px 14px'
+                  }}
+                >
+                  Bắt đầu trò chơi
+                </button>
+                
+                <button 
+                  className="neon-btn" 
+                  onClick={handleCancelRoom}
+                  style={{
+                    width: '100%',
+                    background: 'transparent',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    boxShadow: 'none',
+                    fontSize: '0.9rem',
+                    padding: '8px 14px'
+                  }}
+                >
+                  Hủy Phòng
+                </button>
+              </div>
             </div>
-          )}
+          </div>
         </div>
+
+        {/* 4. RENDER BONG BÓNG NGƯỜI CHƠI TRÔI NỔI */}
+        {totalPlayers === 0 ? (
+          <div style={{ 
+            position: 'absolute', 
+            top: '55%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)', 
+            color: 'var(--text-muted)',
+            textAlign: 'center',
+            zIndex: 1020
+          }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '10px', animation: 'space-twinkle 1s infinite' }}>⏳</div>
+            Đang chờ mọi người tham gia phòng...
+          </div>
+        ) : (
+          bubbles.map((b) => {
+            const pAvatar = getAvatarByNickname(b.nickname);
+            const pColors = getColorsByNickname(b.nickname);
+            const radius = b.size / 2;
+
+            return (
+              <div 
+                key={b.nickname}
+                className="cosmic-player-bubble"
+                style={{
+                  left: `${b.x - radius}px`,
+                  top: `${b.y - radius}px`,
+                  width: `${b.size}px`,
+                  height: `${b.size}px`,
+                  background: `linear-gradient(135deg, ${pColors.left}, ${pColors.right})`
+                }}
+              >
+                <span className="cosmic-player-emoji">{pAvatar.emoji}</span>
+                <span className="cosmic-player-name">{b.nickname}</span>
+              </div>
+            );
+          })
+        )}
       </div>
     );
   }

@@ -21,6 +21,7 @@ function App() {
   const { role, subView } = parseHash(hash);
   
   const [lastMessage, setLastMessage] = useState(null);
+  const [joinedPlayer, setJoinedPlayer] = useState(null); // Lưu thông tin đăng nhập thành công để truyền cho PlayerView
 
   // Lắng nghe sự kiện thay đổi hash (Back/Forward) của trình duyệt
   useEffect(() => {
@@ -54,6 +55,11 @@ function App() {
   // Tự động chuyển trang sang vai trò PLAYER khi nhận được thông báo JOIN_SUCCESS từ WebSocket
   useEffect(() => {
     if (lastMessage && lastMessage.type === 'JOIN_SUCCESS') {
+      setJoinedPlayer({
+        pin: lastMessage.pin,
+        nickname: lastMessage.nickname,
+        playerList: lastMessage.playerList
+      });
       window.location.hash = '#/player';
     }
   }, [lastMessage]);
@@ -78,6 +84,7 @@ function App() {
   const handleBackToHome = () => {
     window.location.hash = '#/';
     setLastMessage(null);
+    setJoinedPlayer(null); // Reset session người chơi
   };
 
   return (
@@ -208,6 +215,7 @@ function App() {
             sendMessage={sendMessage}
             lastMessage={lastMessage}
             onBackToHome={handleBackToHome}
+            joinedPlayer={joinedPlayer}
           />
         )}
       </main>
