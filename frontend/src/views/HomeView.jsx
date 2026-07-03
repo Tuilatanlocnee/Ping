@@ -6,9 +6,12 @@ import React, { useState, useEffect } from 'react';
  */
 export default function HomeView({ onSelectRole, lastMessage, sendMessage, isConnected }) {
   const [pin, setPin] = useState('');
+  const [pinArray, setPinArray] = useState(['', '', '', '', '', '']);
   const [nickname, setNickname] = useState('');
   const [pinVerified, setPinVerified] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const pinRefs = React.useRef([]);
 
   // Tự động kiểm tra mã PIN truyền qua URL query parameters (ví dụ quét QR có điền sẵn PIN)
   useEffect(() => {
@@ -17,6 +20,14 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
     if (urlPin) {
       const cleanedPin = urlPin.replace(/\D/g, '').slice(0, 6);
       setPin(cleanedPin);
+      
+      const arr = cleanedPin.split('');
+      const newPinArray = ['', '', '', '', '', ''];
+      for (let i = 0; i < 6; i++) {
+        newPinArray[i] = arr[i] || '';
+      }
+      setPinArray(newPinArray);
+
       if (isConnected && cleanedPin.length === 6) {
         sendMessage({
           type: 'CHECK_ROOM',
@@ -48,6 +59,16 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
     }
   }, [lastMessage]);
 
+  // Tự động focus vào ô nhập PIN đầu tiên khi component mount hoặc khi reset PIN
+  useEffect(() => {
+    if (!pinVerified) {
+      const timer = setTimeout(() => {
+        pinRefs.current[0]?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [pinVerified]);
+
   const handleCheckRoom = () => {
     if (!pin.trim()) {
       setErrorMsg('Vui lòng nhập mã PIN phòng chơi.');
@@ -76,6 +97,45 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
       pin: pin.trim(),
       nickname: nickname.trim()
     });
+  };
+
+  const handlePinChange = (value, index) => {
+    // Chỉ cho phép nhập số
+    if (value && !/^\d$/.test(value)) return;
+
+    const newPinArray = [...pinArray];
+    newPinArray[index] = value;
+    setPinArray(newPinArray);
+
+    const newPinStr = newPinArray.join('');
+    setPin(newPinStr);
+
+    // Tự động focus sang ô tiếp theo nếu đã điền
+    if (value !== '' && index < 5) {
+      pinRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handlePinKeyDown = (e, index) => {
+    // Nếu bấm Backspace và ô hiện tại đang trống, focus lùi về ô trước
+    if (e.key === 'Backspace' && pinArray[index] === '' && index > 0) {
+      pinRefs.current[index - 1]?.focus();
+    }
+  };
+
+  const handlePinPaste = (e) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    const newPinArray = [...pinArray];
+    for (let i = 0; i < 6; i++) {
+      newPinArray[i] = pastedData[i] || '';
+    }
+    setPinArray(newPinArray);
+    setPin(newPinArray.join(''));
+    
+    // Focus vào ô thích hợp
+    const focusIndex = Math.min(pastedData.length, 5);
+    pinRefs.current[focusIndex]?.focus();
   };
 
   return (
@@ -112,27 +172,26 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
 
           <form onSubmit={handleJoin} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', marginTop: 'auto' }}>
             {!pinVerified ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <input 
-                  type="text" 
-                  placeholder="Mã PIN trò chơi" 
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  maxLength={6}
-                  style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    padding: '12px',
-                    borderRadius: '10px',
-                    color: 'white',
-                    fontSize: '1.1rem',
-                    textAlign: 'center',
-                    letterSpacing: '2px',
-                    fontWeight: 'bold',
-                    width: '100%'
-                  }}
-                  required
-                />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center', width: '100%' }}>
+                <div className="pin-label-title">Mã PIN trò chơi</div>
+                <div className="pin-inputs-container" onPaste={handlePinPaste}>
+                  {pinArray.map((digit, idx) => (
+                    <input
+                      key={idx}
+                      type="text"
+                      ref={(el) => (pinRefs.current[idx] = el)}
+                      value={digit}
+                      onChange={(e) => handlePinChange(e.target.value.slice(-1), idx)}
+                      onKeyDown={(e) => handlePinKeyDown(e, idx)}
+                      className="pin-input-field"
+                      maxLength={1}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      required
+                      autoFocus={idx === 0}
+                    />
+                  ))}
+                </div>
                 
                 <button 
                   type="submit" 
@@ -140,14 +199,26 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
                   disabled={!isConnected}
                   style={{ 
                     width: '100%', 
-                    padding: '12px',
-                    background: 'linear-gradient(135deg, var(--color-blue), hsl(190, 100%, 45%))',
-                    boxShadow: '0 0 15px rgba(0, 191, 255, 0.3)',
-                    marginTop: '5px',
-                    fontSize: '0.95rem'
+                    padding: '14px',
+                    background: 'linear-gradient(135deg, #681eff, #8a2be2)',
+                    boxShadow: '0 0 15px rgba(104, 30, 255, 0.3)',
+                    marginTop: '10px',
+                    fontSize: '1rem',
+                    fontWeight: 'bold',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px'
                   }}
                 >
-                  {isConnected ? 'Tham gia' : 'Đang kết nối...'}
+                  {isConnected ? (
+                    <>
+                      <span>Tham gia</span>
+                      <span style={{ fontSize: '1.2rem' }}>→</span>
+                    </>
+                  ) : (
+                    'Đang kết nối...'
+                  )}
                 </button>
               </div>
             ) : (
@@ -169,6 +240,8 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
                     type="button" 
                     onClick={() => {
                       setPinVerified(false);
+                      setPin('');
+                      setPinArray(['', '', '', '', '', '']);
                       setErrorMsg('');
                     }}
                     style={{

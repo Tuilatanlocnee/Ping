@@ -177,14 +177,7 @@ export default function PlayerView({
   // 1. MÀN HÌNH ĐĂNG NHẬP PHÒNG CHƠI (JOIN)
   if (playerState === 'JOIN') {
     return (
-      <div className="glass-panel fade-in" style={{
-        maxWidth: '450px',
-        margin: '50px auto',
-        padding: '30px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px'
-      }}>
+      <div className="glass-panel fade-in player-card">
         <h2 style={{
           textAlign: 'center',
           fontSize: '2rem',
@@ -341,16 +334,7 @@ export default function PlayerView({
   // 2. MÀN HÌNH CHỜ HOST BẮT ĐẦU (LOBBY)
   if (playerState === 'LOBBY') {
     return (
-      <div className="glass-panel fade-in" style={{
-        maxWidth: '450px',
-        margin: '60px auto',
-        padding: '40px',
-        textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '24px'
-      }}>
+      <div className="glass-panel fade-in player-card" style={{ textAlign: 'center', alignItems: 'center', gap: '24px' }}>
         <div style={{ fontSize: '4rem', animation: 'pulse-glow 2s infinite ease-in-out', borderRadius: '50%', width: '90px', height: '90px', display: 'flex', alignItems: 'center', justifycontent: 'center', background: 'rgba(255,255,255,0.02)' }}>
           🎮
         </div>
@@ -515,14 +499,9 @@ export default function PlayerView({
           : 'radial-gradient(circle, hsla(355, 90%, 20%, 0.4) 0%, transparent 70%)',
         transition: 'var(--transition-smooth)'
       }}>
-        <div className="glass-panel" style={{
-          maxWidth: '450px',
-          width: '100%',
-          padding: '40px 30px',
+        <div className="glass-panel player-card" style={{
           border: isCorrect ? '2px solid var(--color-green)' : '2px solid var(--color-red)',
           boxShadow: isCorrect ? '0 0 25px var(--color-green-glow)' : '0 0 25px var(--color-red-glow)',
-          display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           gap: '20px'
         }}>
@@ -582,16 +561,7 @@ export default function PlayerView({
   // 6. MÀN HÌNH CHỜ BẢNG XẾP HẠNG (LEADERBOARD_WAIT)
   if (playerState === 'LEADERBOARD_WAIT') {
     return (
-      <div className="glass-panel fade-in" style={{
-        maxWidth: '450px',
-        margin: '60px auto',
-        padding: '40px',
-        textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '24px'
-      }}>
+      <div className="glass-panel fade-in player-card" style={{ textAlign: 'center', alignItems: 'center', gap: '24px' }}>
         <div style={{ fontSize: '4rem', animation: 'pulse-glow 2s infinite ease-in-out' }}>📊</div>
         <h3 style={{ fontSize: '1.6rem', fontWeight: '700' }}>Bảng Xếp Hạng Đang Chạy</h3>
         <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: '1.5' }}>
@@ -604,13 +574,8 @@ export default function PlayerView({
   // 7. MÀN HÌNH VINH DANH CHUNG CUỘC (PODIUM)
   if (playerState === 'PODIUM') {
     return (
-      <div className="glass-panel fade-in" style={{
-        maxWidth: '450px',
-        margin: '60px auto',
-        padding: '40px',
+      <div className="glass-panel fade-in player-card" style={{
         textAlign: 'center',
-        display: 'flex',
-        flexDirection: 'column',
         alignItems: 'center',
         gap: '24px',
         border: finalRank && finalRank <= 3 ? '2px solid #ffd700' : '1px solid var(--border-glass)',

@@ -12,11 +12,11 @@
   --bg-glass: rgba(255, 255, 255, 0.03);
   --border-glass: rgba(255, 255, 255, 0.08);
   --border-glass-active: rgba(255, 255, 255, 0.2);
-  
+
   --primary: hsl(263, 90%, 52%);
   --primary-glow: hsla(263, 90%, 52%, 0.35);
   --secondary: hsl(280, 80%, 50%);
-  
+
   /* Các màu đáp án dạng Neon hiện đại */
   --color-red: hsl(355, 100%, 60%);
   --color-red-glow: hsla(355, 100%, 60%, 0.3);
@@ -29,7 +29,7 @@
 
   --text-primary: #ffffff;
   --text-muted: hsl(220, 20%, 65%);
-  
+
   --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   --transition-fast: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
@@ -41,15 +41,18 @@
 }
 
 /* Đồng bộ font chữ cho tất cả các phần tử form */
-button, input, select, textarea {
+button,
+input,
+select,
+textarea {
   font-family: inherit;
 }
 
 body {
   margin: 0;
   background-color: var(--bg-dark);
-  background-image: 
-    radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%), 
+  background-image:
+    radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
     radial-gradient(at 50% 0%, hsla(225, 39%, 25%, 0.2) 0, transparent 50%),
     radial-gradient(at 100% 100%, hsla(262, 47%, 20%, 0.15) 0, transparent 50%);
   background-attachment: fixed;
@@ -105,9 +108,11 @@ body {
   0% {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
   }
+
   50% {
     box-shadow: 0 0 25px rgba(255, 255, 255, 0.25);
   }
+
   100% {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
   }
@@ -123,6 +128,7 @@ body {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -180,14 +186,17 @@ body {
   background: linear-gradient(135deg, hsl(355, 90%, 50%), hsl(355, 100%, 45%));
   box-shadow: 0 6px 20px var(--color-red-glow);
 }
+
 .answer-option.blue {
   background: linear-gradient(135deg, hsl(205, 90%, 45%), hsl(205, 100%, 40%));
   box-shadow: 0 6px 20px var(--color-blue-glow);
 }
+
 .answer-option.yellow {
   background: linear-gradient(135deg, hsl(45, 95%, 45%), hsl(45, 100%, 40%));
   box-shadow: 0 6px 20px var(--color-yellow-glow);
 }
+
 .answer-option.green {
   background: linear-gradient(135deg, hsl(150, 80%, 40%), hsl(150, 90%, 35%));
   box-shadow: 0 6px 20px var(--color-green-glow);
@@ -263,6 +272,7 @@ body {
   0% {
     transform: rotateX(-16deg) rotateY(0deg);
   }
+
   100% {
     transform: rotateX(-16deg) rotateY(360deg);
   }
@@ -305,12 +315,29 @@ body {
 }
 
 /* Face positions */
-.cube-face.front  { transform: rotateY(  0deg) translateZ(45px); }
-.cube-face.back   { transform: rotateY(180deg) translateZ(45px); }
-.cube-face.right  { transform: rotateY( 90deg) translateZ(45px); }
-.cube-face.left   { transform: rotateY(-90deg) translateZ(45px); }
-.cube-face.top    { transform: rotateX( 90deg) translateZ(45px); }
-.cube-face.bottom { transform: rotateX(-90deg) translateZ(45px); }
+.cube-face.front {
+  transform: rotateY(0deg) translateZ(45px);
+}
+
+.cube-face.back {
+  transform: rotateY(180deg) translateZ(45px);
+}
+
+.cube-face.right {
+  transform: rotateY(90deg) translateZ(45px);
+}
+
+.cube-face.left {
+  transform: rotateY(-90deg) translateZ(45px);
+}
+
+.cube-face.top {
+  transform: rotateX(90deg) translateZ(45px);
+}
+
+.cube-face.bottom {
+  transform: rotateX(-90deg) translateZ(45px);
+}
 
 /* Host Cube color styling (Purple Glow) */
 .cube-host .cube-face {
@@ -318,9 +345,11 @@ body {
   background: hsla(280, 80%, 8%, 0.4);
   box-shadow: inset 0 0 15px rgba(162, 0, 255, 0.25), 0 0 12px rgba(162, 0, 255, 0.15);
 }
+
 .cube-host .cube-face::before {
   border-color: rgba(162, 0, 255, 0.25);
 }
+
 .glass-panel:hover .cube-host .cube-face {
   border-color: rgba(162, 0, 255, 0.85);
   box-shadow: inset 0 0 25px rgba(162, 0, 255, 0.55), 0 0 35px rgba(162, 0, 255, 0.45);
@@ -332,9 +361,11 @@ body {
   background: hsla(195, 80%, 6%, 0.4);
   box-shadow: inset 0 0 15px rgba(0, 191, 255, 0.25), 0 0 12px rgba(0, 191, 255, 0.15);
 }
+
 .cube-player .cube-face::before {
   border-color: rgba(0, 191, 255, 0.25);
 }
+
 .glass-panel:hover .cube-player .cube-face {
   border-color: rgba(0, 191, 255, 0.85);
   box-shadow: inset 0 0 25px rgba(0, 191, 255, 0.55), 0 0 35px rgba(0, 191, 255, 0.45);
@@ -376,16 +407,17 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 70vh !important; /* Đảm bảo chiều cao tối thiểu để căn giữa dọc */
+    min-height: 70vh !important;
+    /* Đảm bảo chiều cao tối thiểu để căn giữa dọc */
     padding: 10px;
   }
-  
+
   .home-grid {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
     max-width: 100% !important;
   }
-  
+
   .home-card {
     padding: 20px 20px !important;
     gap: 12px !important;
@@ -401,30 +433,47 @@ body {
   .home-card p {
     display: none !important;
   }
-  
+
   .home-card .scene3d {
     width: 80px !important;
     height: 80px !important;
     margin: 2px auto 6px auto !important;
   }
-  
+
   .home-card .cube3d {
     width: 50px !important;
     height: 50px !important;
   }
-  
+
   .home-card .cube-face {
     width: 50px !important;
     height: 50px !important;
     font-size: 1.3rem !important;
   }
-  
-  .home-card .cube-face.front  { transform: rotateY(  0deg) translateZ(25px) !important; }
-  .home-card .cube-face.back   { transform: rotateY(180deg) translateZ(25px) !important; }
-  .home-card .cube-face.right  { transform: rotateY( 90deg) translateZ(25px) !important; }
-  .home-card .cube-face.left   { transform: rotateY(-90deg) translateZ(25px) !important; }
-  .home-card .cube-face.top    { transform: rotateX( 90deg) translateZ(25px) !important; }
-  .home-card .cube-face.bottom { transform: rotateX(-90deg) translateZ(25px) !important; }
+
+  .home-card .cube-face.front {
+    transform: rotateY(0deg) translateZ(25px) !important;
+  }
+
+  .home-card .cube-face.back {
+    transform: rotateY(180deg) translateZ(25px) !important;
+  }
+
+  .home-card .cube-face.right {
+    transform: rotateY(90deg) translateZ(25px) !important;
+  }
+
+  .home-card .cube-face.left {
+    transform: rotateY(-90deg) translateZ(25px) !important;
+  }
+
+  .home-card .cube-face.top {
+    transform: rotateX(90deg) translateZ(25px) !important;
+  }
+
+  .home-card .cube-face.bottom {
+    transform: rotateX(-90deg) translateZ(25px) !important;
+  }
 
   /* Tối ưu kích thước nút bấm và ô nhập liệu */
   .home-card .neon-btn {
@@ -433,7 +482,7 @@ body {
     border-radius: 10px !important;
     margin-top: 5px !important;
   }
-  
+
   .home-card input {
     padding: 10px !important;
     font-size: 0.95rem !important;
@@ -465,6 +514,7 @@ body {
   h2 {
     font-size: 1.6rem !important;
   }
+
   h3 {
     font-size: 1.3rem !important;
   }
@@ -485,5 +535,81 @@ body {
   }
 }
 
+/* Tối ưu hóa card giao diện Người chơi để Responsive Mobile */
+.player-card {
+  max-width: 450px;
+  width: 100%;
+  margin: 40px auto;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
+@media (max-width: 600px) {
+  .player-card {
+    margin: 16px auto !important;
+    padding: 24px 20px !important;
+    gap: 16px !important;
+    max-width: 92% !important;
+  }
+}
 
+/* ==========================================================================
+   OTP PIN INPUT FIELDS (6 ô nhập số giống Kahoot mẫu)
+   ========================================================================== */
+.pin-label-title {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 5px;
+  text-align: center;
+  width: 100%;
+}
+
+.pin-inputs-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  margin: 15px 0;
+}
+
+.pin-input-field {
+  width: 46px;
+  height: 58px;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  color: white !important;
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  text-align: center !important;
+  transition: var(--transition-fast) !important;
+  outline: none !important;
+}
+
+.pin-input-field::placeholder {
+  color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.pin-input-field:focus {
+  border-color: #681eff !important;
+  background: rgba(104, 30, 255, 0.05) !important;
+  box-shadow: 0 0 10px rgba(104, 30, 255, 0.2) !important;
+}
+
+@media (max-width: 600px) {
+  .pin-inputs-container {
+    gap: 6px !important;
+  }
+
+  .pin-input-field {
+    width: 36px !important;
+    height: 48px !important;
+    font-size: 1.25rem !important;
+    border-radius: 8px !important;
+  }
+}
