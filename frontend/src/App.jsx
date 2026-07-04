@@ -62,6 +62,18 @@ function App() {
   // Callback nhận tin nhắn từ WebSocket Server
   const handleMessageReceived = useCallback((data) => {
     setLastMessage(data);
+
+    // Xử lý trực tiếp tin nhắn JOIN_SUCCESS ngay lập tức để tránh lỗi ghi đè tin nhắn dồn dập (WebSocket Batching)
+    if (data && data.type === 'JOIN_SUCCESS') {
+      setJoinedPlayer({
+        pin: data.pin,
+        nickname: data.nickname,
+        playerList: data.playerList
+      });
+      setRole('PLAYER');
+      setSubView(null);
+      window.location.hash = '#/player';
+    }
   }, []);
 
   // Luôn luôn kết nối WebSocket để hỗ trợ kiểm tra mã PIN ngay tại trang chủ
@@ -69,20 +81,6 @@ function App() {
     getWSUrl(),
     handleMessageReceived
   );
-
-  // Tự động chuyển trang sang vai trò PLAYER khi nhận được thông báo JOIN_SUCCESS từ WebSocket
-  useEffect(() => {
-    if (lastMessage && lastMessage.type === 'JOIN_SUCCESS') {
-      setJoinedPlayer({
-        pin: lastMessage.pin,
-        nickname: lastMessage.nickname,
-        playerList: lastMessage.playerList
-      });
-      setRole('PLAYER');
-      setSubView(null);
-      window.location.hash = '#/player';
-    }
-  }, [lastMessage]);
 
   // Các hàm điều hành URL hash để cập nhật lịch sử duyệt web
   const handleSelectRole = (newRole) => {
