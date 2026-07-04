@@ -96,14 +96,16 @@ class GameManager {
       const existingPlayer = room.players.get(cleanNickname);
       // Nếu cùng một kết nối socket gửi lại (tránh lỗi kích hoạt đúp trên di động)
       if (existingPlayer.socket === playerSocket) {
+        console.log(`[Player] ${cleanNickname} gửi lại yêu cầu join trùng socket cũ -> Tự động chấp nhận.`);
         return { success: true, cleanNickname };
       }
       // Nếu kết nối cũ đã bị ngắt (hoặc không còn OPEN), cho phép người chơi kết nối lại
       if (!existingPlayer.socket || existingPlayer.socket.readyState !== 1) {
         existingPlayer.socket = playerSocket;
-        console.log(`[Player] ${cleanNickname} reconnect thành công qua socket mới.`);
+        console.log(`[Player] ${cleanNickname} reconnect thành công qua socket mới (Socket cũ state: ${existingPlayer.socket ? existingPlayer.socket.readyState : 'none'}).`);
         return { success: true, cleanNickname };
       }
+      console.log(`[Player] Từ chối ${cleanNickname} vì tên đã tồn tại và socket cũ vẫn đang OPEN.`);
       return { success: false, error: 'Nickname này đã tồn tại trong phòng.' };
     }
 
