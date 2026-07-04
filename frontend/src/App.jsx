@@ -16,9 +16,8 @@ const parseHash = (hash) => {
 };
 
 function App() {
-  // Đồng bộ hóa hash từ URL của trình duyệt để hỗ trợ nút Back/Forward
-  const [hash, setHash] = useState(window.location.hash || '#/');
-  const { role, subView } = parseHash(hash);
+  const [role, setRole] = useState('SELECT');
+  const [subView, setSubView] = useState(null);
   
   const [lastMessage, setLastMessage] = useState(null);
   const [joinedPlayer, setJoinedPlayer] = useState(null); // Lưu thông tin đăng nhập thành công để truyền cho PlayerView
@@ -35,11 +34,18 @@ function App() {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
   };
 
-  // Lắng nghe sự kiện thay đổi hash (Back/Forward) của trình duyệt
+  // Lắng nghe sự kiện thay đổi hash (Back/Forward) của trình duyệt để đồng bộ vào state
   useEffect(() => {
     const handleHashChange = () => {
-      setHash(window.location.hash || '#/');
+      const currentHash = window.location.hash || '#/';
+      const parsed = parseHash(currentHash);
+      setRole(parsed.role);
+      setSubView(parsed.subView);
     };
+    
+    // Đồng bộ ngay lần đầu mount
+    handleHashChange();
+    
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
@@ -72,16 +78,21 @@ function App() {
         nickname: lastMessage.nickname,
         playerList: lastMessage.playerList
       });
+      setRole('PLAYER');
+      setSubView(null);
       window.location.hash = '#/player';
     }
   }, [lastMessage]);
 
   // Các hàm điều hành URL hash để cập nhật lịch sử duyệt web
   const handleSelectRole = (newRole) => {
+    setRole(newRole);
+    setSubView(null);
     window.location.hash = `#/${newRole.toLowerCase()}`;
   };
 
   const handleNavigate = (newSubView) => {
+    setSubView(newSubView);
     if (newSubView) {
       window.location.hash = `#/host/${newSubView.toLowerCase().replace('_', '-')}`;
     } else {
@@ -90,13 +101,16 @@ function App() {
   };
 
   const handleBackToDashboard = () => {
+    setSubView(null);
     window.location.hash = '#/host';
   };
 
   const handleBackToHome = () => {
+    setJoinedPlayer(null);
+    setRole('SELECT');
+    setSubView(null);
     window.location.hash = '#/';
     setLastMessage(null);
-    setJoinedPlayer(null); // Reset session người chơi
   };
 
   return (
