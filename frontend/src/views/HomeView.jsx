@@ -110,16 +110,20 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
     const newPinStr = newPinArray.join('');
     setPin(newPinStr);
 
-    // Tự động focus sang ô tiếp theo nếu đã điền
+    // Tự động focus sang ô tiếp theo nếu đã điền (trì hoãn 20ms để tránh lỗi lặp phím khi dùng bộ gõ tiếng Việt Unikey/EVKey)
     if (value !== '' && index < 5) {
-      pinRefs.current[index + 1]?.focus();
+      setTimeout(() => {
+        pinRefs.current[index + 1]?.focus();
+      }, 20);
     }
   };
 
   const handlePinKeyDown = (e, index) => {
-    // Nếu bấm Backspace và ô hiện tại đang trống, focus lùi về ô trước
+    // Nếu bấm Backspace và ô hiện tại đang trống, focus lùi về ô trước (trì hoãn 20ms để đảm bảo đồng bộ)
     if (e.key === 'Backspace' && pinArray[index] === '' && index > 0) {
-      pinRefs.current[index - 1]?.focus();
+      setTimeout(() => {
+        pinRefs.current[index - 1]?.focus();
+      }, 20);
     }
   };
 
@@ -264,11 +268,11 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
                   onChange={(e) => setNickname(e.target.value.slice(0, 15))}
                   maxLength={15}
                   style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.1)',
+                    background: 'rgba(255,255,255,0.01)',
+                    border: '1px solid var(--border-glass)',
                     padding: '12px',
                     borderRadius: '10px',
-                    color: 'white',
+                    color: 'var(--text-primary)',
                     fontSize: '1rem',
                     textAlign: 'center',
                     width: '100%'

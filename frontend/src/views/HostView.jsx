@@ -269,17 +269,19 @@ export default function HostView({
         setTimeLeft(payload.question.timeLimit);
         setHostState('QUESTION');
         
-        // Khởi động đồng hồ đếm ngược phía client
+        // Khởi động đồng hồ đếm ngược phía client (chỉ khi timeLimit > 0)
         if (timerRef.current) clearInterval(timerRef.current);
-        timerRef.current = setInterval(() => {
-          setTimeLeft((prev) => {
-            if (prev <= 1) {
-              clearInterval(timerRef.current);
-              return 0;
-            }
-            return prev - 1;
-          });
-        }, 1000);
+        if (payload.question.timeLimit > 0) {
+          timerRef.current = setInterval(() => {
+            setTimeLeft((prev) => {
+              if (prev <= 1) {
+                clearInterval(timerRef.current);
+                return 0;
+              }
+              return prev - 1;
+            });
+          }, 1000);
+        }
         break;
 
       case 'PLAYER_ANSWERED':
@@ -423,7 +425,7 @@ export default function HostView({
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: '30px' }}>
-        <h2 style={{ fontSize: '3rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '15px', margin: 0 }}>
+        <h2 style={{ fontSize: '3rem', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '15px', margin: 0 }}>
           <span>🏆</span>
           <span style={{ 
             background: 'linear-gradient(to right, #ffd700, #ff8c00)', 
@@ -432,7 +434,7 @@ export default function HostView({
             color: 'transparent',
             WebkitTextFillColor: 'transparent' 
           }}>
-            Bảng Vinh Danh
+            Bảng xếp hạng
           </span>
           <span>🏆</span>
         </h2>
@@ -531,9 +533,9 @@ export default function HostView({
   if (hostState === 'DASHBOARD') {
     return (
       <div className="fade-in" style={{ maxWidth: '800px', margin: '20px auto', width: '100%' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '2rem', fontWeight: '800' }}>Host Dashboard</h2>
-          <div style={{ display: 'flex', gap: '12px' }}>
+        <div className="host-dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <h2 style={{ fontSize: '2rem', fontWeight: '700' }}>Host Dashboard</h2>
+          <div className="host-dashboard-buttons" style={{ display: 'flex', gap: '12px' }}>
             <button className="neon-btn" onClick={() => onNavigate('CREATE_QUIZ')} style={{
               background: 'linear-gradient(135deg, var(--secondary), hsl(280, 100%, 55%))',
               boxShadow: '0 0 15px rgba(162, 0, 255, 0.3)'
@@ -588,7 +590,7 @@ export default function HostView({
             {quizzes.map((quiz) => (
               <div 
                 key={quiz.id} 
-                className="glass-panel" 
+                className="glass-panel quiz-item-row" 
                 onClick={() => handleLaunchQuiz(quiz)}
                 style={{
                   padding: '24px 30px',
@@ -596,7 +598,7 @@ export default function HostView({
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   cursor: 'pointer',
-                  border: '1px solid rgba(255,255,255,0.06)'
+                  border: '1px solid var(--border-glass)'
                 }}
               >
                 <div>
@@ -650,10 +652,10 @@ export default function HostView({
         <div className="space-stars"></div>
         <div className="space-nebula"></div>
 
-        {/* BẢNG ĐIỀU HÀNH TRUNG TÂM TÍCH HỢP TOÀN BỘ (PIN + QR + ĐIỀU KHIỂN) */}
-        <div style={{
+        {/* 3. CARD THÔNG TIN PHÒNG CHỜ (Mã PIN, QR Code, Số lượng người chơi) */}
+        <div className="glass-panel lobby-card" style={{
           position: 'absolute',
-          top: '50%',
+          top: '45%',
           left: '50%',
           transform: 'translate(-50%, -50%)', // Căn giữa tuyệt đối ngang dọc
           zIndex: 1050,
@@ -672,26 +674,26 @@ export default function HostView({
           maxWidth: '560px'
         }}>
           {/* Phần 1: Mã PIN (Trên cùng của card) */}
-          <div style={{
+          <div className="lobby-pin" style={{
             width: '100%',
             textAlign: 'center',
             paddingBottom: '16px',
             borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
           }}>
-            <div style={{ fontSize: '3.6rem', fontWeight: '900', color: 'white', letterSpacing: '4px', margin: 0, lineHeight: 1.1 }}>
+            <div style={{ fontSize: '3.6rem', fontWeight: '700', color: 'white', letterSpacing: '4px', margin: 0, lineHeight: 1.1 }}>
               PIN: <span style={{ color: '#ffd700' }}>{pin}</span>
             </div>
           </div>
 
           {/* Phần 2: Nội dung QR và Điều khiển (Dưới mã PIN, xếp song song) */}
-          <div style={{
+          <div className="lobby-content" style={{
             display: 'flex',
             width: '100%',
             gap: '40px',
             alignItems: 'center'
           }}>
             {/* Cột trái: QR Code */}
-            <div style={{
+            <div className="lobby-qr" style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -717,26 +719,27 @@ export default function HostView({
             </div>
 
             {/* Đường ngăn cách dọc tinh tế */}
-            <div style={{ width: '1px', height: '140px', background: 'rgba(255, 255, 255, 0.1)' }}></div>
+            <div className="lobby-divider" style={{ width: '1px', height: '140px', background: 'rgba(255, 255, 255, 0.1)' }}></div>
 
             {/* Cột phải: Thông số người chơi & Cụm nút bấm */}
-            <div style={{
+            <div className="lobby-controls" style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               gap: '16px',
               flex: '1.2'
             }}>
-              <div style={{ textAlign: 'center' }}>
-                <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                  Người chơi tham gia:
+              <div className="lobby-controls-stats" style={{ textAlign: 'center' }}>
+                <div className="lobby-controls-stats-label" style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                  <span className="desktop-text">Người chơi tham gia:</span>
+                  <span className="mobile-text">Người chơi:</span>
                 </div>
-                <div style={{ fontSize: '2.8rem', fontWeight: '900', color: 'var(--primary)', margin: '4px 0 0 0', lineHeight: 1 }}>
+                <div className="lobby-controls-stats-value" style={{ fontSize: '2.8rem', fontWeight: '700', color: 'var(--primary)', margin: '4px 0 0 0', lineHeight: 1 }}>
                   {totalPlayers}
                 </div>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+              <div className="lobby-buttons" style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
                 <button 
                   className="neon-btn" 
                   onClick={handleStartGame}
@@ -749,7 +752,8 @@ export default function HostView({
                     padding: '10px 14px'
                   }}
                 >
-                  Bắt đầu trò chơi
+                  <span className="desktop-text">Bắt đầu trò chơi</span>
+                  <span className="mobile-text">Bắt đầu</span>
                 </button>
                 
                 <button 
@@ -861,15 +865,15 @@ export default function HostView({
             <div style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Thời gian còn lại</div>
             <div style={{
               fontSize: '4rem',
-              fontWeight: '800',
-              color: timeLeft <= 5 ? 'var(--color-red)' : 'white',
+              fontWeight: '700',
+              color: timeLeft <= 5 && timeLeft > 0 ? 'var(--color-red)' : 'white',
               transition: 'var(--transition-fast)'
-            }}>{timeLeft}</div>
+            }}>{currentQuestion.timeLimit === 0 ? '∞' : timeLeft}</div>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <div style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Câu trả lời nhận được</div>
-            <div style={{ fontSize: '4rem', fontWeight: '800', color: 'var(--primary)' }}>
+            <div style={{ fontSize: '4rem', fontWeight: '700', color: 'var(--primary)' }}>
               {totalAnswers}<span style={{ fontSize: '1.5rem', color: 'var(--text-muted)', fontWeight: '400' }}>/{totalPlayers}</span>
             </div>
           </div>
@@ -989,7 +993,7 @@ export default function HostView({
   if (hostState === 'LEADERBOARD') {
     return (
       <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: '30px', padding: '20px' }}>
-        <h2 style={{ fontSize: '3rem', fontWeight: '800', background: 'linear-gradient(to right, #a200ff, #ff007f)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+        <h2 style={{ fontSize: '3rem', fontWeight: '700', background: 'linear-gradient(to right, #a200ff, #ff007f)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
           Bảng Xếp Hạng
         </h2>
 

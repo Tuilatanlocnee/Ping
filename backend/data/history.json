@@ -1,5 +1,26 @@
 [
   {
+    "id": "hist_1783180432704",
+    "playedAt": "2026-07-04T15:53:52.704Z",
+    "pin": "348925",
+    "quizTitle": "TOÁN",
+    "totalPlayers": 4,
+    "podium": [
+      {
+        "nickname": "Duc",
+        "score": 2553
+      },
+      {
+        "nickname": "Loc",
+        "score": 1583
+      },
+      {
+        "nickname": "Thanh",
+        "score": 1378
+      }
+    ]
+  },
+  {
     "id": "hist_1783066275979",
     "playedAt": "2026-07-03T08:11:15.981Z",
     "pin": "428500",

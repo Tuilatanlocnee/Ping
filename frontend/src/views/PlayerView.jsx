@@ -75,6 +75,7 @@ export default function PlayerView({
   const [lobbyPlayers, setLobbyPlayers] = useState(joinedPlayer ? (joinedPlayer.playerList || []) : []);
   const containerRef = useRef(null);
   const [bubbles, setBubbles] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
 
   // Đồng bộ hóa trạng thái khi prop joinedPlayer thay đổi từ ngoài vào
   useEffect(() => {
@@ -291,6 +292,7 @@ export default function PlayerView({
         break;
 
       case 'LEADERBOARD_SHOWN':
+        setLeaderboard(payload.leaderboard || []);
         setPlayerState('LEADERBOARD_WAIT');
         break;
 
@@ -376,7 +378,7 @@ export default function PlayerView({
         <h2 style={{
           textAlign: 'center',
           fontSize: '2rem',
-          fontWeight: '800',
+          fontWeight: '700',
           background: 'linear-gradient(to right, #a200ff, #ff007f)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent'
@@ -407,11 +409,11 @@ export default function PlayerView({
                 onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 maxLength={6}
                 style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.1)',
+                  background: 'rgba(255,255,255,0.01)',
+                  border: '1px solid var(--border-glass)',
                   padding: '14px',
                   borderRadius: '10px',
-                  color: 'white',
+                  color: 'var(--text-primary)',
                   fontSize: '1.2rem',
                   textAlign: 'center',
                   letterSpacing: '2px',
@@ -479,11 +481,11 @@ export default function PlayerView({
                   onChange={(e) => setNickname(e.target.value.slice(0, 15))}
                   maxLength={15}
                   style={{
-                    background: 'rgba(255,255,255,0.05)',
-                    border: '1px solid rgba(255,255,255,0.1)',
+                    background: 'rgba(255,255,255,0.01)',
+                    border: '1px solid var(--border-glass)',
                     padding: '14px',
                     borderRadius: '10px',
-                    color: 'white',
+                    color: 'var(--text-primary)',
                     fontSize: '1.1rem',
                     textAlign: 'center'
                   }}
@@ -711,7 +713,7 @@ export default function PlayerView({
         }}>
           👍
         </div>
-        <h2 style={{ fontSize: '2rem', fontWeight: '800' }}>Đáp án đã được gửi!</h2>
+        <h2 style={{ fontSize: '2rem', fontWeight: '700' }}>Đáp án đã được gửi!</h2>
         <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem' }}>
           Bạn gửi câu trả lời siêu nhanh! Đang chờ những người chơi khác trả lời hoặc hết giờ đếm ngược...
         </p>
@@ -748,7 +750,7 @@ export default function PlayerView({
           
           <h2 style={{ 
             fontSize: '2.5rem', 
-            fontWeight: '800',
+            fontWeight: '700',
             color: isCorrect ? 'var(--color-green)' : 'var(--color-red)'
           }}>
             {isCorrect ? 'Chính Xác!' : 'Sai Mất Rồi!'}
@@ -797,14 +799,88 @@ export default function PlayerView({
     );
   }
 
-  // 6. MÀN HÌNH CHỜ BẢNG XẾP HẠNG (LEADERBOARD_WAIT)
+  // 6. MÀN HÌNH BẢNG XẾP HẠNG CHI TIẾT (LEADERBOARD_WAIT)
   if (playerState === 'LEADERBOARD_WAIT') {
     return (
-      <div className="glass-panel fade-in player-card" style={{ textAlign: 'center', alignItems: 'center', gap: '24px' }}>
-        <div style={{ fontSize: '4rem', animation: 'pulse-glow 2s infinite ease-in-out' }}>📊</div>
-        <h3 style={{ fontSize: '1.6rem', fontWeight: '700' }}>Bảng Xếp Hạng Đang Chạy</h3>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1rem', lineHeight: '1.5' }}>
-          Đang chiếu bảng xếp hạng trên màn hình lớn. Hãy kiểm tra xem bạn có lọt vào Top 5 không nhé!
+      <div className="glass-panel fade-in player-card" style={{ textAlign: 'center', alignItems: 'center', gap: '20px' }}>
+        <h2 style={{ 
+          fontSize: '2rem', 
+          fontWeight: '700', 
+          background: 'linear-gradient(to right, #a200ff, #ff007f)', 
+          WebkitBackgroundClip: 'text', 
+          WebkitTextFillColor: 'transparent',
+          margin: 0
+        }}>
+          Bảng Xếp Hạng
+        </h2>
+
+        <div style={{
+          width: '100%',
+          background: 'rgba(0, 0, 0, 0.2)',
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.05)',
+          padding: '10px 0',
+          textAlign: 'left'
+        }}>
+          {leaderboard.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '30px', color: 'var(--text-muted)' }}>
+              Đang tải bảng xếp hạng...
+            </div>
+          ) : (
+            leaderboard.map((item, idx) => {
+              const isMe = item.nickname === nickname;
+              return (
+                <div 
+                  key={item.nickname} 
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '12px 20px',
+                    borderBottom: idx < leaderboard.length - 1 ? '1px solid rgba(255, 255, 255, 0.05)' : 'none',
+                    background: isMe 
+                      ? 'rgba(104, 30, 255, 0.12)' 
+                      : idx === 0 
+                      ? 'rgba(255, 255, 255, 0.02)' 
+                      : 'transparent',
+                    borderLeft: isMe ? '4px solid var(--primary)' : 'none',
+                    animation: 'fadeIn 0.4s ease'
+                  }}
+                >
+                  <div style={{
+                    fontSize: '1.2rem',
+                    fontWeight: 'bold',
+                    width: '35px',
+                    color: idx === 0 ? '#ffd700' : idx === 1 ? '#c0c0c0' : idx === 2 ? '#cd7f32' : 'var(--text-muted)'
+                  }}>
+                    {idx + 1}
+                  </div>
+                  <div style={{ fontSize: '1.1rem', fontWeight: '600', flex: 1, color: isMe ? 'white' : 'inherit' }}>
+                    {item.nickname} {isMe && <span style={{ color: 'var(--primary)', fontSize: '0.85rem' }}>(Bạn)</span>}
+                    {item.streak > 1 && (
+                      <span style={{
+                        marginLeft: '8px',
+                        background: 'linear-gradient(135deg, #ff4500, #ff8c00)',
+                        color: 'white',
+                        padding: '1px 6px',
+                        borderRadius: '10px',
+                        fontSize: '0.75rem',
+                        fontWeight: 'bold'
+                      }}>
+                        🔥 Chuỗi {item.streak}
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: isMe ? 'var(--primary)' : 'var(--text-muted)' }}>
+                    {item.score} pts
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.4', margin: '5px 0 0 0' }}>
+          Đang chiếu bảng xếp hạng. Hãy chờ Host chuyển sang câu tiếp theo nhé!
         </p>
       </div>
     );
@@ -823,7 +899,7 @@ export default function PlayerView({
         <div style={{ fontSize: '5rem' }}>
           {finalRank === 1 ? '👑' : finalRank === 2 ? '🥈' : finalRank === 3 ? '🥉' : '👏'}
         </div>
-        <h3 style={{ fontSize: '1.8rem', fontWeight: '800' }}>Trò Chơi Kết Thúc!</h3>
+        <h3 style={{ fontSize: '1.8rem', fontWeight: '700' }}>Trò Chơi Kết Thúc!</h3>
 
         <div style={{ 
           background: 'rgba(255,255,255,0.03)', 

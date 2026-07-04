@@ -23,6 +23,18 @@ function App() {
   const [lastMessage, setLastMessage] = useState(null);
   const [joinedPlayer, setJoinedPlayer] = useState(null); // Lưu thông tin đăng nhập thành công để truyền cho PlayerView
 
+  // Quản lý theme Sáng / Tối (Light & Dark Mode)
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
   // Lắng nghe sự kiện thay đổi hash (Back/Forward) của trình duyệt
   useEffect(() => {
     const handleHashChange = () => {
@@ -108,7 +120,7 @@ function App() {
           onClick={handleBackToHome}
           style={{ 
             fontSize: '1.3rem', 
-            fontWeight: '800', 
+            fontWeight: '700', 
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -126,41 +138,66 @@ function App() {
           </span>
         </div>
 
-        {role === 'SELECT' ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {role === 'SELECT' ? (
+            <button 
+              onClick={() => handleSelectRole('HOST')}
+              className="neon-btn"
+              style={{
+                padding: '8px 16px',
+                fontSize: '0.85rem',
+                background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+                boxShadow: '0 0 12px var(--primary-glow)',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                border: 'none',
+                color: 'white',
+                fontWeight: 'bold',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}
+            >
+              <span>📺</span> Tạo Phòng
+            </button>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem' }}>
+              <span style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                background: isConnected ? 'var(--color-green)' : 'var(--color-red)',
+                boxShadow: isConnected ? '0 0 8px var(--color-green)' : '0 0 8px var(--color-red)'
+              }} />
+              <span style={{ color: isConnected ? 'var(--color-green)' : 'var(--color-red)', fontWeight: '500' }}>
+                {isConnected ? 'Realtime Connected' : 'Disconnected'}
+              </span>
+            </div>
+          )}
+
+          {/* Nút bật tắt giao diện Sáng / Tối */}
           <button 
-            onClick={() => handleSelectRole('HOST')}
-            className="neon-btn"
+            onClick={toggleTheme} 
             style={{
-              padding: '8px 16px',
-              fontSize: '0.85rem',
-              background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
-              boxShadow: '0 0 12px var(--primary-glow)',
-              borderRadius: '10px',
-              cursor: 'pointer',
-              border: 'none',
-              color: 'white',
-              fontWeight: 'bold',
+              background: 'transparent',
+              border: '1px solid var(--border-glass)',
+              borderRadius: '50%',
+              width: '38px',
+              height: '38px',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px'
+              justifyContent: 'center',
+              fontSize: '1.2rem',
+              cursor: 'pointer',
+              color: 'var(--text-primary)',
+              transition: 'var(--transition-fast)',
+              padding: 0
             }}
+            title={theme === 'dark' ? 'Chuyển sang chế độ Sáng' : 'Chuyển sang chế độ Tối'}
           >
-            <span>📺</span> Tạo Phòng
+            {theme === 'dark' ? '☀️' : '🌙'}
           </button>
-        ) : (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem' }}>
-            <span style={{
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              background: isConnected ? 'var(--color-green)' : 'var(--color-red)',
-              boxShadow: isConnected ? '0 0 8px var(--color-green)' : '0 0 8px var(--color-red)'
-            }} />
-            <span style={{ color: isConnected ? 'var(--color-green)' : 'var(--color-red)', fontWeight: '500' }}>
-              {isConnected ? 'Realtime Connected' : 'Disconnected'}
-            </span>
-          </div>
-        )}
+        </div>
       </header>
 
       {/* Vùng hiển thị nội dung chính */}

@@ -48,13 +48,14 @@ export default function HistoryView({ onBackToDashboard }) {
 
   return (
     <div className="fade-in" style={{ maxWidth: '850px', margin: '20px auto', width: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: '800' }}>Lịch Sử Các Trận Đấu</h2>
+      <div className="history-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <h2 style={{ fontSize: '2rem', fontWeight: '700' }}>Lịch Sử Các Trận Đấu</h2>
         <button className="neon-btn" onClick={onBackToDashboard} style={{
           background: 'transparent',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          border: '1px solid var(--border-glass)',
           boxShadow: 'none',
-          fontSize: '0.95rem'
+          fontSize: '0.95rem',
+          color: 'var(--text-primary)'
         }}>
           Quay lại Dashboard
         </button>
@@ -86,7 +87,7 @@ export default function HistoryView({ onBackToDashboard }) {
           {historyList.map((item) => {
             const winner = item.podium && item.podium[0] ? item.podium[0] : null;
             return (
-              <div key={item.id} className="glass-panel" style={{
+              <div key={item.id} className="glass-panel history-item-row" style={{
                 padding: '24px 30px',
                 display: 'grid',
                 gridTemplateColumns: '1fr auto',

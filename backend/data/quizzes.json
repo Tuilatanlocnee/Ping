@@ -1,30 +1,301 @@
 [
   {
-    "id": "quiz_1782702664108_iey6tua40",
-    "title": "sfrtyui",
-    "createdAt": "2026-06-29T03:11:04.108Z",
+    "id": "quiz_1783175054866_yanwo3faa",
+    "title": "TOÁN",
+    "createdAt": "2026-07-04T14:24:14.866Z",
     "questions": [
       {
-        "questionText": "ưertyui",
+        "questionText": "1+1",
         "options": [
-          "ưer",
-          "sdf",
-          "sdf",
-          "sdf"
+          "2",
+          "3",
+          "4",
+          "5"
         ],
         "correctAnswerIndex": 0,
         "timeLimit": 15,
         "points": 1000
       },
       {
-        "questionText": "sưdesfg",
+        "questionText": "3+3",
         "options": [
-          "édrfg",
-          "dfg",
-          "dfg",
-          "dfg"
+          "8",
+          "6",
+          "4",
+          "10"
+        ],
+        "correctAnswerIndex": 1,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "2+9",
+        "options": [
+          "10",
+          "8",
+          "23",
+          "11"
+        ],
+        "correctAnswerIndex": 3,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "9-2",
+        "options": [
+          "0",
+          "12",
+          "7",
+          "3"
+        ],
+        "correctAnswerIndex": 2,
+        "timeLimit": 15,
+        "points": 1000
+      }
+    ]
+  },
+  {
+    "id": "quiz_1783182008162_bdr4pnufg",
+    "title": "Chương 2 NA",
+    "createdAt": "2026-07-04T16:20:08.162Z",
+    "questions": [
+      {
+        "questionText": "Nhận định nào sau đây là không đúng khi nói về những vấn đề cần giải quyết trong việc nghiên cứu thị trường quốc tế.",
+        "options": [
+          "Xác định quốc gia đáp ứng việc nhập khẩu với điều kiện thuận lợi.",
+          "Xác định mức cạnh tranh trên thị trường.",
+          "Khi nghiên cứu thị trường thế giới chỉ cần quan tâm đến những thông tin về quốc gia xuất khẩu và bỏ qua thị trường nội địa.",
+          "Nghiên cứu thị trường thế giới để dự báo được dung lượng của thị trường, mức biến động giá cả để đưa ra chiến lược marketing phù hợp."
+        ],
+        "correctAnswerIndex": 3,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Thông tin nào sau đây không thuộc về môi trường Chính trị - pháp luật khi nghiên cứu thị trường",
+        "options": [
+          "Thái độ của chính phủ đối với ngoại thương.",
+          "Các thủ tục hải quan, thuế hải quan.",
+          "Luật chống phá giá.",
+          "Tình hình lạm phát, giảm phát."
+        ],
+        "correctAnswerIndex": 3,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Phỏng vấn qua hình thức thư tín không nên sử dụng ở quốc gia nào?",
+        "options": [
+          "Đan Mạch",
+          "Nam Mỹ",
+          "Phần Lan",
+          "Nauy"
+        ],
+        "correctAnswerIndex": 1,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Quy trình nghiên cứu marketing xuất khẩu có mấy bước?",
+        "options": [
+          "5 bước",
+          "6 bước",
+          "7 bước",
+          "8 bước"
         ],
         "correctAnswerIndex": 0,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Hiệp định NAFTA bao gồm những quốc gia nào?",
+        "options": [
+          "Mỹ, Brazil, Canada",
+          "Mỹ, Canada, Mexico",
+          "Canada, Mexico, Brazil",
+          "Mexico, Mỹ, Brazil"
+        ],
+        "correctAnswerIndex": 1,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Tổ chức thu thập thông tin gồm có mấy bước?",
+        "options": [
+          "5",
+          "6",
+          "7",
+          "8"
+        ],
+        "correctAnswerIndex": 0,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Giai đoạn chính yếu của tiến trình thu thập thông tin trong nghiên cứu thị trường thế giới là giai đoạn nào?",
+        "options": [
+          "Phát triển kế hoạch nghiên cứu",
+          "Cập nhật thông tin vào ngân hàng dữ liệu",
+          "Xác định thông tin cần thiết",
+          "Giải thích thông tin"
+        ],
+        "correctAnswerIndex": 2,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Thị trường xuất khẩu tiềm năng thường được nghiên cứu, đánh giá ở góc độ nào?",
+        "options": [
+          "Số lượng các khách hàng tương lai và tỉ suất mua mong đợi tối đa",
+          "Tốc độ tăng trưởng của thị trường và tỉ lệ tăng trưởng dự kiến",
+          "Số lượng khách hàng tiềm năng và vị thế cạnh tranh của doanh nghiệp",
+          "Số lượng khách hàng tiềm năng và quy mô thị trường"
+        ],
+        "correctAnswerIndex": 2,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Một trong những điều kiện cần được đáp ứng để được hưởng nhượng bộ về thuế quan khi thực hiện CEPT",
+        "options": [
+          "Sản phẩm đó phải là một sản phẩm của khối ASEAN, thỏa mãn hàm lượng xuất xứ từ các nước thành viên ít nhất 40%",
+          "Sản phẩm đó phải có chương trình giảm thuế được ACCI thông qua",
+          "Sản phẩm đó chỉ cần thuộc danh mục cắt giảm thuế của các nước xuất khẩu",
+          "Các sản phẩm nằm trong danh mục cắt giảm thuế phải có mức thuế quan (nhập khẩu) bằng hoặc thấp hơn 10%"
+        ],
+        "correctAnswerIndex": 0,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Điều kiện thuận lợi của Việt Nam khi thực hiện CEPT/AFTA là gì ?",
+        "options": [
+          "Trình độ phát triển kinh tế vững mạnh của Việt Nam và các nước ASEAN (thu nhập bình quân đầu người, trình độ công nghệ, dự trữ ngoại tệ, vốn đầu tư…)",
+          "Trình độ quản lý của doanh nghiệp Việt Nam ngày càng phát triển",
+          "Tận dụng ưu thế về lao động rẻ và có hàm lượng chất xám cao",
+          "Việc xóa bỏ hàng rào thuế quan và phi thuế quan trở thành cơ hội cho các nhà sản xuất trong nước"
+        ],
+        "correctAnswerIndex": 2,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Đâu là danh mục hàng hóa trong lộ trình thực hiện AFTA của Việt Nam?",
+        "options": [
+          "Danh mục loại trừ hoàn toàn",
+          "Danh mục hàng nông sản chế biến",
+          "Danh mục sản phẩm tạm thời giảm thuế quan.",
+          "Danh mục sản phẩm kỹ thuật mới."
+        ],
+        "correctAnswerIndex": 0,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Có bao nhiêu nguyên tắc hợp tác ASEAN",
+        "options": [
+          "11 nguyên tắc",
+          "12 nguyên tắc",
+          "13 nguyên tắc",
+          "14 nguyên tắc"
+        ],
+        "correctAnswerIndex": 3,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Khi cần đánh giá thực chất hoạt động của các nhà cạnh tranh, người ta có thể khai thác thông tin từ:",
+        "options": [
+          "Chính sách thương mại hiện hành",
+          "Đại lý và nhà phân phối nước ngoài",
+          "Bộ phận truyền thông của nhà cạnh tranh",
+          "Tất cả ý trên đều đúng"
+        ],
+        "correctAnswerIndex": 3,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Đâu là khó khăn phát sinh khi sử dụng nguồn thông tin từ những nhà khảo sát tại nước ngoài?",
+        "options": [
+          "Sự khác biệt về thời gian và không gian",
+          "Đánh giá chất lượng thông tin",
+          "Sự khác nhau về tiêu chuẩn quốc gia",
+          "Tất cả ý trên đều đúng"
+        ],
+        "correctAnswerIndex": 3,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Hội nghị thượng đỉnh ASEAN họp thượng đỉnh không chính thức?",
+        "options": [
+          "3 năm 1 lần",
+          "1 năm 1 lần",
+          "2 năm 1 lần",
+          "4 năm 1 lần"
+        ],
+        "correctAnswerIndex": 1,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Asean có bao nhiêu thành viên?",
+        "options": [
+          "7",
+          "8",
+          "9",
+          "10"
+        ],
+        "correctAnswerIndex": 3,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Việt Nam gia nhập Asean vào năm nào",
+        "options": [
+          "1995",
+          "1996",
+          "1997",
+          "1998"
+        ],
+        "correctAnswerIndex": 0,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Hiện nay có bao nhiêu quốc gia vùng lãnh thổ?",
+        "options": [
+          "203",
+          "204",
+          "205",
+          "206"
+        ],
+        "correctAnswerIndex": 1,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Ủy ban điều phối các hoạt động của Việt Nam trong ASEAN là ai?",
+        "options": [
+          "ông Trịnh Quốc Đạt",
+          "bà Nguyễn Thị Mai Thảo",
+          "ông Trần Đức Lương",
+          "bà Lê Ngọc Yến Thanh"
+        ],
+        "correctAnswerIndex": 2,
+        "timeLimit": 15,
+        "points": 1000
+      },
+      {
+        "questionText": "Việt Nam tham gia AFTA vào năm nào ?",
+        "options": [
+          "2006",
+          "1995",
+          "1997",
+          "1998"
+        ],
+        "correctAnswerIndex": 1,
         "timeLimit": 15,
         "points": 1000
       }

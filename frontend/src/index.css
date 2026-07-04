@@ -6,7 +6,7 @@
   color-scheme: dark;
   color: rgba(255, 255, 255, 0.9);
 
-  /* Bảng màu Design System (HSL) */
+  /* Bảng màu Design System (HSL) - Tối mặc định */
   --bg-dark: hsl(224, 71%, 4%);
   --bg-card: hsla(224, 71%, 8%, 0.7);
   --bg-glass: rgba(255, 255, 255, 0.03);
@@ -32,6 +32,45 @@
 
   --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   --transition-fast: all 0.15s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  /* Định nghĩa các biến radial background tối */
+  --bg-radial-1: hsla(253, 16%, 7%, 1);
+  --bg-radial-2: hsla(225, 39%, 25%, 0.2);
+  --bg-radial-3: hsla(262, 47%, 20%, 0.15);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  color: hsl(224, 71%, 10%);
+
+  /* Bảng màu Design System (HSL) - Sáng */
+  --bg-dark: hsl(220, 30%, 95%);
+  --bg-card: rgba(255, 255, 255, 0.75);
+  --bg-glass: rgba(0, 0, 0, 0.02);
+  --border-glass: rgba(0, 0, 0, 0.08);
+  --border-glass-active: rgba(0, 0, 0, 0.15);
+
+  --primary: hsl(263, 85%, 52%);
+  --primary-glow: hsla(263, 85%, 52%, 0.2);
+  --secondary: hsl(280, 75%, 50%);
+
+  /* Các màu đáp án neon đã tăng độ tương phản để dễ đọc trên nền sáng */
+  --color-red: hsl(355, 85%, 50%);
+  --color-red-glow: hsla(355, 85%, 50%, 0.15);
+  --color-blue: hsl(205, 85%, 46%);
+  --color-blue-glow: hsla(205, 85%, 46%, 0.15);
+  --color-yellow: hsl(42, 95%, 42%);
+  --color-yellow-glow: hsla(42, 95%, 42%, 0.15);
+  --color-green: hsl(150, 80%, 36%);
+  --color-green-glow: hsla(150, 80%, 36%, 0.15);
+
+  --text-primary: hsl(224, 71%, 12%);
+  --text-muted: hsl(220, 15%, 40%);
+
+  /* Định nghĩa các biến radial background sáng */
+  --bg-radial-1: hsla(220, 20%, 90%, 1);
+  --bg-radial-2: hsla(200, 30%, 85%, 0.25);
+  --bg-radial-3: hsla(262, 30%, 80%, 0.15);
 }
 
 * {
@@ -52,14 +91,23 @@ body {
   margin: 0;
   background-color: var(--bg-dark);
   background-image:
-    radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
-    radial-gradient(at 50% 0%, hsla(225, 39%, 25%, 0.2) 0, transparent 50%),
-    radial-gradient(at 100% 100%, hsla(262, 47%, 20%, 0.15) 0, transparent 50%);
+    radial-gradient(at 0% 0%, var(--bg-radial-1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, var(--bg-radial-2) 0, transparent 50%),
+    radial-gradient(at 100% 100%, var(--bg-radial-3) 0, transparent 50%);
   background-attachment: fixed;
   min-height: 100vh;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Phân tách hiển thị chữ trên Desktop và Mobile */
+.desktop-text {
+  display: inline !important;
+}
+.mobile-text {
+  display: none !important;
 }
 
 /* Các lớp tiện ích (Utility classes) */
@@ -533,6 +581,172 @@ body {
     font-size: 0.95rem !important;
     margin-right: 12px !important;
   }
+
+  /* Tối ưu hóa các nút bấm toàn cục trên mobile */
+  .neon-btn {
+    padding: 10px 18px !important;
+    font-size: 0.9rem !important;
+    border-radius: 8px !important;
+  }
+
+  /* Host Dashboard Header */
+  .host-dashboard-header {
+    flex-direction: column !important;
+    gap: 16px !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+  
+  .host-dashboard-buttons {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+
+  .host-dashboard-buttons .neon-btn {
+    flex: 1 1 auto !important;
+    min-width: 120px !important;
+    justify-content: center !important;
+  }
+
+  /* Dòng đề thi trên Dashboard */
+  .quiz-item-row {
+    flex-direction: column !important;
+    gap: 16px !important;
+    text-align: center !important;
+    align-items: center !important;
+    padding: 20px 16px !important;
+  }
+
+  .quiz-item-row > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Các nút trong tạo đề */
+  .quiz-creator-actions {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .quiz-creator-actions .neon-btn {
+    width: 100% !important;
+    flex: none !important;
+  }
+
+  /* Lịch sử trận đấu */
+  .history-header {
+    flex-direction: column !important;
+    gap: 16px !important;
+    text-align: center !important;
+    align-items: center !important;
+  }
+  
+  .history-item-row {
+    grid-template-columns: 1fr !important;
+    text-align: center !important;
+    gap: 16px !important;
+    padding: 20px 16px !important;
+  }
+  
+  .history-item-row > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* Ẩn hiển thị chữ trên Mobile */
+  .desktop-text {
+    display: none !important;
+  }
+  .mobile-text {
+    display: inline !important;
+  }
+
+  /* Lobby Card phòng chờ của Host trên di động */
+  .lobby-card {
+    padding: 20px !important;
+    width: 92% !important;
+    gap: 16px !important;
+    top: 50% !important;
+  }
+
+  .lobby-card .lobby-pin {
+    padding-bottom: 12px !important;
+  }
+
+  .lobby-card .lobby-pin div {
+    font-size: 2.2rem !important; /* Thu nhỏ mã PIN để vừa màn hình */
+    letter-spacing: 2px !important;
+  }
+
+  .lobby-content {
+    flex-direction: column !important;
+    gap: 16px !important;
+    align-items: center !important;
+  }
+
+  .lobby-qr {
+    gap: 8px !important;
+  }
+
+  .lobby-qr img {
+    width: 105px !important;
+    height: 105px !important;
+  }
+
+  .lobby-qr div {
+    font-size: 0.75rem !important;
+  }
+
+  .lobby-divider {
+    width: 100% !important;
+    height: 1px !important;
+    margin: 4px 0 !important;
+  }
+
+  .lobby-controls {
+    width: 100% !important;
+    gap: 12px !important;
+    align-items: center !important;
+  }
+
+  .lobby-controls-stats {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  .lobby-controls-stats-label {
+    font-size: 0.8rem !important;
+    margin: 0 !important;
+  }
+
+  .lobby-controls-stats-value {
+    font-size: 1.6rem !important;
+    margin: 0 !important;
+  }
+
+  .lobby-buttons {
+    flex-direction: row !important; /* Xếp ngang trên di động */
+    gap: 8px !important;
+    width: 100% !important;
+  }
+
+  .lobby-buttons .neon-btn {
+    flex: 1 !important;
+    padding: 10px 6px !important;
+    font-size: 0.85rem !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
 }
 
 /* Tối ưu hóa card giao diện Người chơi để Responsive Mobile */
@@ -581,11 +795,11 @@ body {
   width: 46px;
   height: 58px;
   background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid var(--border-glass) !important;
   border-radius: 12px !important;
-  color: white !important;
+  color: var(--text-primary) !important;
   font-size: 1.5rem !important;
-  font-weight: 800 !important;
+  font-weight: 700 !important;
   text-align: center !important;
   transition: var(--transition-fast) !important;
   outline: none !important;

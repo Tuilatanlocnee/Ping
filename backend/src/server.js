@@ -239,8 +239,8 @@ wss.on('connection', (ws) => {
             // Gửi BXH cho Host
             sendJSON(ws, { type: 'LEADERBOARD', leaderboard });
             
-            // Gửi thông báo cho Players để chuẩn bị cho câu hỏi tiếp theo
-            broadcastToPlayers(room, { type: 'LEADERBOARD_SHOWN' });
+            // Gửi thông báo cho Players để chuẩn bị cho câu hỏi tiếp theo kèm BXH
+            broadcastToPlayers(room, { type: 'LEADERBOARD_SHOWN', leaderboard });
           }
           break;
         }
@@ -374,7 +374,11 @@ function sendQuestion(room, questionIndex) {
   const question = room.questions[questionIndex];
   const durationMs = question.timeLimit * 1000;
   
-  room.questionEndTime = Date.now() + durationMs;
+  if (question.timeLimit > 0) {
+    room.questionEndTime = Date.now() + durationMs;
+  } else {
+    room.questionEndTime = null;
+  }
 
   // Host nhận toàn bộ thông tin câu hỏi (cả đáp án đúng và các options)
   sendJSON(room.hostSocket, {
@@ -402,13 +406,15 @@ function sendQuestion(room, questionIndex) {
 
   broadcastToPlayers(room, playerPayload);
 
-  // Thiết lập timer đếm ngược tự động kết thúc câu hỏi
-  room.questionTimer = setTimeout(() => {
-    endQuestion(room);
-  }, durationMs);
-}
-
-/**
+  // Thiết lập timer đếm ngược tự động kết thúc câu hỏi (chỉ khi timeLimit > 0)
+  if (question.timeLimit > 0) {
+    room.questionTimer = setTimeout(() => {
+      endQuestion(room);
+    }, durationMs);
+  } else {
+    room.questionTimer = null;
+  }
+}/**
  * Kết thúc câu hỏi hiện tại, thống kê kết quả và gửi cho Host & Player
  * @param {Object} room 
  */
