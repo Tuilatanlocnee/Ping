@@ -10,6 +10,7 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
   const [nickname, setNickname] = useState('');
   const [pinVerified, setPinVerified] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [isJoining, setIsJoining] = useState(false);
 
   const pinRefs = React.useRef([]);
 
@@ -53,6 +54,7 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
         break;
       case 'JOIN_FAILED':
         setErrorMsg(payload.error || 'Không thể tham gia phòng.');
+        setIsJoining(false);
         break;
       default:
         break;
@@ -83,6 +85,8 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
 
   const handleJoin = (e) => {
     e.preventDefault();
+    if (isJoining) return;
+    
     if (!pinVerified) {
       handleCheckRoom();
       return;
@@ -92,6 +96,7 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
       return;
     }
     setErrorMsg('');
+    setIsJoining(true);
     sendMessage({
       type: 'JOIN_ROOM',
       pin: pin.trim(),
@@ -284,7 +289,7 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
                 <button 
                   type="submit" 
                   className="neon-btn"
-                  disabled={!isConnected}
+                  disabled={!isConnected || isJoining}
                   style={{ 
                     width: '100%', 
                     padding: '12px',
@@ -294,7 +299,7 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
                     fontSize: '0.95rem'
                   }}
                 >
-                  Tham Gia Phòng
+                  {isJoining ? 'Đang vào...' : 'Tham Gia Phòng'}
                 </button>
               </div>
             )}
