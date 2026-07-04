@@ -76,6 +76,7 @@ export default function PlayerView({
   const containerRef = useRef(null);
   const [bubbles, setBubbles] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
+  const [isJoining, setIsJoining] = useState(false);
 
   // Đồng bộ hóa trạng thái khi prop joinedPlayer thay đổi từ ngoài vào
   useEffect(() => {
@@ -256,6 +257,7 @@ export default function PlayerView({
         setLobbyPlayers(payload.playerList || []);
         setPlayerState('LOBBY');
         setErrorMsg('');
+        setIsJoining(false);
         break;
 
       case 'LOBBY_PLAYERS_UPDATED':
@@ -264,6 +266,7 @@ export default function PlayerView({
 
       case 'JOIN_FAILED':
         setErrorMsg(payload.error || 'Không thể tham gia phòng.');
+        setIsJoining(false);
         break;
 
       case 'GAME_STARTED':
@@ -334,6 +337,8 @@ export default function PlayerView({
   // Gửi yêu cầu tham gia phòng
   const handleJoin = (e) => {
     e.preventDefault();
+    if (isJoining) return;
+    
     if (!pinVerified) {
       handleCheckRoom();
       return;
@@ -343,6 +348,7 @@ export default function PlayerView({
       return;
     }
     setErrorMsg('');
+    setIsJoining(true);
     sendMessage({
       type: 'JOIN_ROOM',
       pin: pin.trim(),
@@ -497,7 +503,7 @@ export default function PlayerView({
               <button 
                 type="submit" 
                 className="neon-btn"
-                disabled={!isConnected}
+                disabled={!isConnected || isJoining}
                 style={{ 
                   width: '100%', 
                   padding: '14px',
@@ -506,7 +512,7 @@ export default function PlayerView({
                   marginTop: '10px'
                 }}
               >
-                {isConnected ? 'Tham Gia Phòng' : 'Đang kết nối đến máy chủ...'}
+                {!isConnected ? 'Đang kết nối đến máy chủ...' : isJoining ? 'Đang vào...' : 'Tham Gia Phòng'}
               </button>
             </div>
           )}
