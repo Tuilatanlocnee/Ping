@@ -232,72 +232,21 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <div className="pin-verified-badge" style={{
-                  background: 'rgba(0, 191, 255, 0.06)',
-                  border: '1px solid rgba(0, 191, 255, 0.15)',
-                  borderRadius: '10px',
-                  padding: '8px 12px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  fontSize: '0.85rem'
-                }}>
-                  <span>
-                    PIN: <strong style={{ color: 'var(--color-blue)' }}>{pin}</strong> ✅
-                  </span>
-                  <button 
-                    type="button" 
-                    onClick={() => {
-                      setPinVerified(false);
-                      setPin('');
-                      setPinArray(['', '', '', '', '', '']);
-                      setErrorMsg('');
-                    }}
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      color: 'var(--text-muted)',
-                      cursor: 'pointer',
-                      fontSize: '0.8rem',
-                      textDecoration: 'underline'
-                    }}
-                  >
-                    Đổi PIN
-                  </button>
-                </div>
-
                 <input 
                   type="text" 
                   placeholder="Nickname của bạn..." 
                   value={nickname}
                   onChange={(e) => setNickname(e.target.value.slice(0, 15))}
                   maxLength={15}
-                  style={{
-                    background: 'rgba(255,255,255,0.01)',
-                    border: '1px solid var(--border-glass)',
-                    padding: '12px',
-                    borderRadius: '10px',
-                    color: 'var(--text-primary)',
-                    fontSize: '1rem',
-                    textAlign: 'center',
-                    width: '100%'
-                  }}
+                  className="nickname-input"
                   required
                   autoFocus
                 />
 
                 <button 
                   type="submit" 
-                  className="neon-btn"
+                  className="neon-btn nickname-submit-btn"
                   disabled={!isConnected || isJoining}
-                  style={{ 
-                    width: '100%', 
-                    padding: '12px',
-                    background: 'linear-gradient(135deg, var(--secondary), hsl(280, 100%, 55%))',
-                    boxShadow: '0 0 15px rgba(162, 0, 255, 0.3)',
-                    marginTop: '5px',
-                    fontSize: '0.95rem'
-                  }}
                 >
                   {isJoining ? 'Đang vào...' : 'Tham Gia Phòng'}
                 </button>

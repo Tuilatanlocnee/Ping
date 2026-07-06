@@ -611,40 +611,17 @@ export default function PlayerView({
     const letters = ['▲', '◆', '●', '■'];
 
     return (
-      <div className="fade-in" style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '85vh',
-        padding: '16px',
-        width: '100%'
-      }}>
-        <div style={{ marginBottom: '15px', fontSize: '1.1rem', color: 'var(--text-muted)' }}>
-          Nickname: <strong style={{ color: 'white' }}>{nickname}</strong>
-        </div>
-        
+      <div className="fade-in player-game-layout">
         {/* Khối hiển thị câu hỏi cho người chơi */}
         {currentQuestionText && (
-          <div className="glass-panel" style={{
-            width: '100%',
-            maxWidth: '900px',
-            padding: '30px 20px',
-            textAlign: 'center',
-            marginBottom: '20px',
-            border: '1px solid rgba(255,255,255,0.08)'
-          }}>
-            <h2 style={{ fontSize: '1.8rem', fontWeight: '700', lineHeight: '1.4', margin: 0 }}>
+          <div className="glass-panel player-question-container">
+            <h2 className="player-question-text">
               {currentQuestionText}
             </h2>
           </div>
         )}
 
-        <div className="answers-grid" style={{ 
-          height: 'auto',
-          minHeight: '40vh',
-          maxHeight: 'none'
-        }}>
+        <div className="player-answers-container">
           {currentOptions.length > 0 ? (
             currentOptions.map((option, idx) => (
               <button 

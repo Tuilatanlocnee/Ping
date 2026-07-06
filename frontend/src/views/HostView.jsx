@@ -823,67 +823,55 @@ export default function HostView({
     const colors = ['red', 'blue', 'yellow', 'green'];
 
     return (
-      <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: '30px', padding: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', maxWidth: '900px', alignItems: 'center' }}>
+      <div className="fade-in host-game-layout">
+        <div className="host-header-bar">
           <div style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>
             Câu hỏi: <span style={{ color: 'white', fontWeight: 'bold' }}>{questionIndex + 1}/{totalQuestions}</span>
           </div>
           <div style={{
             background: 'rgba(255, 255, 255, 0.1)',
-            padding: '8px 20px',
+            padding: '6px 16px',
             borderRadius: '20px',
-            fontSize: '1rem'
+            fontSize: '0.95rem'
           }}>
             PIN: <strong>{pin}</strong>
           </div>
           <button className="neon-btn" onClick={handleSkipQuestion} style={{
             background: 'rgba(255, 255, 255, 0.05)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
-            boxShadow: 'none'
+            boxShadow: 'none',
+            padding: '6px 16px',
+            fontSize: '0.9rem'
           }}>
             Bỏ Qua
           </button>
         </div>
 
-        <div className="glass-panel" style={{
-          width: '100%',
-          maxWidth: '900px',
-          padding: '40px 30px',
-          textAlign: 'center'
-        }}>
-          <h2 style={{ fontSize: '2.2rem', fontWeight: '700', lineHeight: '1.4' }}>{currentQuestion.questionText}</h2>
+        <div className="glass-panel host-question-card">
+          <h2 className="host-question-title">{currentQuestion.questionText}</h2>
         </div>
 
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-around',
-          width: '100%',
-          maxWidth: '900px',
-          margin: '20px 0'
-        }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Thời gian còn lại</div>
-            <div style={{
-              fontSize: '4rem',
-              fontWeight: '700',
-              color: timeLeft <= 5 && timeLeft > 0 ? 'var(--color-red)' : 'white',
-              transition: 'var(--transition-fast)'
-            }}>{currentQuestion.timeLimit === 0 ? '∞' : timeLeft}</div>
+        <div className="host-status-row">
+          <div className="host-status-box">
+            <div className="host-status-label">Thời gian còn lại</div>
+            <div className={`host-status-value ${timeLeft <= 5 && timeLeft > 0 ? 'warning' : ''}`}>
+              {currentQuestion.timeLimit === 0 ? '∞' : timeLeft}
+            </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>Câu trả lời nhận được</div>
-            <div style={{ fontSize: '4rem', fontWeight: '700', color: 'var(--primary)' }}>
-              {totalAnswers}<span style={{ fontSize: '1.5rem', color: 'var(--text-muted)', fontWeight: '400' }}>/{totalPlayers}</span>
+          <div className="host-status-box">
+            <div className="host-status-label">Câu trả lời nhận được</div>
+            <div className="host-status-value primary">
+              {totalAnswers}<span style={{ fontSize: '1.2rem', color: 'var(--text-muted)', fontWeight: '400' }}>/{totalPlayers}</span>
             </div>
           </div>
         </div>
 
-        <div className="answers-grid">
+        <div className="answers-grid host-answers-grid">
           {currentQuestion.options.map((option, idx) => (
-            <div key={idx} className={`answer-option ${colors[idx]}`} style={{ cursor: 'default' }}>
+            <div key={idx} className={`answer-option host-answer-option ${colors[idx]}`} style={{ cursor: 'default' }}>
               <span className="shape-icon">{letters[idx]}</span>
-              {option}
+              <span style={{ flex: 1, wordBreak: 'break-word', textAlign: 'left' }}>{option}</span>
             </div>
           ))}
         </div>
@@ -898,34 +886,20 @@ export default function HostView({
     const maxAnswers = Math.max(...stats, 1);
 
     return (
-      <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: '30px', padding: '20px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', maxWidth: '900px', alignItems: 'center' }}>
-          <div style={{ fontSize: '1.5rem', fontWeight: '700' }}>Kết Quả Câu Hỏi</div>
-          <button className="neon-btn" onClick={handleShowLeaderboard}>
+      <div className="fade-in host-game-layout">
+        <div className="host-header-bar">
+          <div style={{ fontSize: '1.4rem', fontWeight: '700' }}>Kết Quả Câu Hỏi</div>
+          <button className="neon-btn" onClick={handleShowLeaderboard} style={{ padding: '8px 20px', fontSize: '0.95rem' }}>
             Xem Bảng Xếp Hạng
           </button>
         </div>
 
-        <div className="glass-panel" style={{
-          width: '100%',
-          maxWidth: '900px',
-          padding: '30px 20px',
-          textAlign: 'center'
-        }}>
-          <h2 style={{ fontSize: '1.8rem', color: 'var(--text-muted)', marginBottom: '10px' }}>Câu hỏi:</h2>
-          <h3 style={{ fontSize: '2rem', fontWeight: '600' }}>{currentQuestion.questionText}</h3>
+        <div className="glass-panel host-question-card" style={{ padding: '16px 20px' }}>
+          <h2 style={{ fontSize: '1.1rem', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Câu hỏi:</h2>
+          <h3 className="host-question-title" style={{ fontSize: '1.5rem' }}>{currentQuestion.questionText}</h3>
         </div>
 
-        <div className="glass-panel" style={{
-          width: '100%',
-          maxWidth: '900px',
-          height: '300px',
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'space-around',
-          padding: '40px 20px 20px 20px',
-          position: 'relative'
-        }}>
+        <div className="glass-panel host-chart-container">
           {stats.map((count, idx) => {
             const heightPercentage = (count / maxAnswers) * 80;
             const isCorrect = idx === correctAnswerIndex;
@@ -938,7 +912,7 @@ export default function HostView({
                 height: '100%',
                 justifyContent: 'flex-end'
               }}>
-                <div style={{ fontSize: '1.2rem', fontWeight: 'bold', marginBottom: '8px' }}>{count}</div>
+                <div style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '6px' }}>{count}</div>
                 <div className={`answer-option ${colors[idx]}`} style={{
                   width: '100%',
                   height: `${Math.max(10, heightPercentage)}%`,
@@ -948,11 +922,11 @@ export default function HostView({
                   boxShadow: isCorrect ? '0 0 20px rgba(255,255,255,0.4)' : 'none',
                   border: isCorrect ? '3px solid white' : 'none'
                 }}>
-                  <span style={{ fontSize: '1.2rem' }}>{letters[idx]}</span>
+                  <span style={{ fontSize: '1.1rem' }}>{letters[idx]}</span>
                 </div>
                 <div style={{ 
-                  marginTop: '10px', 
-                  fontSize: '1rem',
+                  marginTop: '6px', 
+                  fontSize: '0.9rem',
                   fontWeight: isCorrect ? 'bold' : 'normal',
                   color: isCorrect ? 'white' : 'var(--text-muted)'
                 }}>
@@ -963,13 +937,13 @@ export default function HostView({
           })}
         </div>
 
-        <div className="answers-grid">
+        <div className="answers-grid host-answers-grid">
           {currentQuestion.options.map((option, idx) => {
             const isCorrect = idx === correctAnswerIndex;
             return (
               <div 
                 key={idx} 
-                className={`answer-option ${colors[idx]}`} 
+                className={`answer-option host-answer-option ${colors[idx]}`} 
                 style={{ 
                   cursor: 'default',
                   opacity: isCorrect ? 1 : 0.4,
@@ -979,8 +953,8 @@ export default function HostView({
                 }}
               >
                 <span className="shape-icon">{letters[idx]}</span>
-                {option}
-                {isCorrect && <span style={{ marginLeft: 'auto', fontSize: '1.5rem' }}>✓</span>}
+                <span style={{ flex: 1, wordBreak: 'break-word', textAlign: 'left' }}>{option}</span>
+                {isCorrect && <span style={{ marginLeft: 'auto', fontSize: '1.3rem' }}>✓</span>}
               </div>
             );
           })}

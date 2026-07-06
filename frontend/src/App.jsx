@@ -213,7 +213,7 @@ function App() {
       </header>
 
       {/* Vùng hiển thị nội dung chính */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '20px' }}>
+      <main className="main-content" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         {error && role !== 'SELECT' && (
           <div className="glass-panel" style={{
             maxWidth: '500px',
@@ -270,7 +270,7 @@ function App() {
       </main>
 
       {/* Footer bản quyền */}
-      <footer style={{
+      <footer className="app-footer" style={{
         padding: '16px',
         textAlign: 'center',
         fontSize: '0.85rem',
