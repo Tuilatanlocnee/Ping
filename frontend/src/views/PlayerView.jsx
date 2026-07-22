@@ -377,27 +377,36 @@ export default function PlayerView({
     }
   };
 
-  // 1. MÀN HÌNH ĐĂNG NHẬP PHÒNG CHƠI (JOIN)
+  // 1. MÀN HÌNH ĐĂNG NHẬP PHÒNG CHỜ (JOIN)
   if (playerState === 'JOIN') {
     return (
       <div className="glass-panel fade-in player-card">
-        <h2 style={{
-          textAlign: 'center',
-          fontSize: '2rem',
-          fontWeight: '700',
-          background: 'linear-gradient(to right, #a200ff, #ff007f)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
-        }}>Tham Gia Game</h2>
+        <div style={{ textAlign: 'center' }}>
+          <h2 style={{
+            fontSize: '1.8rem',
+            fontWeight: '800',
+            fontFamily: 'var(--font-tech)',
+            letterSpacing: '1px',
+            background: 'linear-gradient(90deg, #00f0ff, #7000ff)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
+            CYBER PLAYER TERMINAL
+          </h2>
+          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)', marginTop: '4px' }}>
+            KẾT NỐI VÀO HỆ THỐNG TRẬN ĐẤU PING!
+          </div>
+        </div>
         
         {errorMsg && (
           <div style={{
-            background: 'rgba(255, 69, 0, 0.1)',
+            background: 'rgba(255, 0, 85, 0.12)',
             border: '1px solid var(--color-red)',
             color: 'var(--color-red)',
             padding: '12px',
-            borderRadius: '8px',
-            fontSize: '0.95rem',
+            borderRadius: '10px',
+            fontSize: '0.85rem',
+            fontFamily: 'var(--font-tech)',
             textAlign: 'center'
           }}>
             ⚠️ {errorMsg}
@@ -406,24 +415,21 @@ export default function PlayerView({
 
         <form onSubmit={handleJoin} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {!pinVerified ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <label style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: '500' }}>PIN PHÒNG CHƠI</label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <label style={{ fontSize: '0.8rem', color: 'var(--primary)', fontFamily: 'var(--font-tech)', fontWeight: '700', letterSpacing: '1px' }}>
+                MÃ PIN GIẢI MÃ PHÒNG CHƠI
+              </label>
               <input 
                 type="text" 
-                placeholder="Mã PIN trò chơi" 
+                placeholder="Nhập mã PIN 6 số..." 
                 value={pin}
                 onChange={(e) => setPin(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 maxLength={6}
+                className="pin-input-field"
                 style={{
-                  background: 'rgba(255,255,255,0.01)',
-                  border: '1px solid var(--border-glass)',
-                  padding: '14px',
-                  borderRadius: '10px',
-                  color: 'var(--text-primary)',
-                  fontSize: '1.2rem',
-                  textAlign: 'center',
-                  letterSpacing: '2px',
-                  fontWeight: 'bold'
+                  width: '100%',
+                  height: '54px',
+                  fontSize: '1.5rem'
                 }}
                 required
                 autoFocus
@@ -436,29 +442,16 @@ export default function PlayerView({
                 style={{ 
                   width: '100%', 
                   padding: '14px',
-                  background: 'linear-gradient(135deg, var(--color-blue), hsl(190, 100%, 45%))',
-                  boxShadow: '0 0 15px rgba(0, 191, 255, 0.3)',
-                  marginTop: '10px'
+                  marginTop: '6px'
                 }}
               >
-                {isConnected ? 'Tham gia' : 'Đang kết nối đến máy chủ...'}
+                {isConnected ? 'XÁC NHẬN MÃ PIN ⚡' : 'ĐANG KẾT NỐI HỆ THỐNG...'}
               </button>
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {/* Hiển thị PIN đã được xác thực */}
-              <div style={{
-                background: 'rgba(0, 191, 255, 0.08)',
-                border: '1px solid rgba(0, 191, 255, 0.2)',
-                borderRadius: '10px',
-                padding: '12px 16px',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center'
-              }}>
-                <span style={{ fontSize: '0.95rem' }}>
-                  PIN: <strong style={{ color: 'var(--color-blue)', letterSpacing: '1px' }}>{pin}</strong> (Hợp lệ ✅)
-                </span>
+              <div className="cyber-badge success" style={{ width: '100%', justifyContent: 'space-between', padding: '10px 14px' }}>
+                <span>PIN #{pin} (HỢP LỆ ✓)</span>
                 <button 
                   type="button" 
                   onClick={() => {
@@ -470,31 +463,26 @@ export default function PlayerView({
                     border: 'none',
                     color: 'var(--text-muted)',
                     cursor: 'pointer',
-                    fontSize: '0.85rem',
+                    fontSize: '0.75rem',
+                    fontFamily: 'var(--font-tech)',
                     textDecoration: 'underline'
                   }}
                 >
-                  Đổi PIN
+                  ĐỔI PIN
                 </button>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <label style={{ fontSize: '0.9rem', color: 'var(--text-muted)', fontWeight: '500' }}>NICKNAME CỦA BẠN</label>
+                <label style={{ fontSize: '0.8rem', color: 'var(--primary)', fontFamily: 'var(--font-tech)', fontWeight: '700', letterSpacing: '1px' }}>
+                  CYBER NICKNAME CỦA BẠN
+                </label>
                 <input 
                   type="text" 
-                  placeholder="Tên hiển thị..." 
+                  placeholder="Nhập nickname..." 
                   value={nickname}
                   onChange={(e) => setNickname(e.target.value.slice(0, 15))}
                   maxLength={15}
-                  style={{
-                    background: 'rgba(255,255,255,0.01)',
-                    border: '1px solid var(--border-glass)',
-                    padding: '14px',
-                    borderRadius: '10px',
-                    color: 'var(--text-primary)',
-                    fontSize: '1.1rem',
-                    textAlign: 'center'
-                  }}
+                  className="nickname-input"
                   required
                   autoFocus
                 />
@@ -502,17 +490,10 @@ export default function PlayerView({
 
               <button 
                 type="submit" 
-                className="neon-btn"
+                className="neon-btn nickname-submit-btn"
                 disabled={!isConnected || isJoining}
-                style={{ 
-                  width: '100%', 
-                  padding: '14px',
-                  background: 'linear-gradient(135deg, var(--secondary), hsl(280, 100%, 55%))',
-                  boxShadow: '0 0 15px rgba(162, 0, 255, 0.3)',
-                  marginTop: '10px'
-                }}
               >
-                {!isConnected ? 'Đang kết nối đến máy chủ...' : isJoining ? 'Đang vào...' : 'Tham Gia Phòng'}
+                {!isConnected ? 'ĐANG KẾT NỐI...' : isJoining ? 'ĐANG VÀO...' : 'KÍCH HOẠT VÀO GAME'}
               </button>
             </div>
           )}
@@ -523,12 +504,12 @@ export default function PlayerView({
           onClick={handleBack}
           style={{
             background: 'transparent',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid var(--border-glass)',
             boxShadow: 'none',
-            fontSize: '0.95rem'
+            fontSize: '0.85rem'
           }}
         >
-          Quay lại
+          QUAY LẠI
         </button>
       </div>
     );
@@ -544,8 +525,28 @@ export default function PlayerView({
       >
         <div className="space-stars"></div>
         <div className="space-nebula"></div>
+        <div className="cyber-grid-overlay"></div>
+        <div className="cyber-scanline"></div>
 
-
+        {/* Thanh thông tin HUD nhỏ góc trên cùng */}
+        <div style={{
+          position: 'absolute',
+          top: '20px',
+          left: '20px',
+          right: '20px',
+          zIndex: 1050,
+          display: 'flex',
+          justify: 'space-between',
+          alignItems: 'center',
+          pointerEvents: 'none'
+        }}>
+          <div className="cyber-badge success" style={{ pointerEvents: 'auto', backdropFilter: 'blur(10px)' }}>
+            <span>🔑</span> PIN #{pin}
+          </div>
+          <div className="cyber-badge" style={{ pointerEvents: 'auto', backdropFilter: 'blur(10px)' }}>
+            <span>👤</span> {nickname} (BẠN)
+          </div>
+        </div>
 
         {/* Render bong bóng người chơi bay lơ lửng */}
         {bubbles.length === 0 ? (
@@ -556,10 +557,11 @@ export default function PlayerView({
             transform: 'translate(-50%, -50%)', 
             color: 'var(--text-muted)',
             textAlign: 'center',
-            zIndex: 1020
+            zIndex: 1020,
+            fontFamily: 'var(--font-tech)'
           }}>
             <div style={{ fontSize: '2.5rem', animation: 'space-twinkle 1s infinite' }}>🛸</div>
-            Đang kết nối vũ trụ...
+            ĐANG KẾT NỐI VŨ TRỤ...
           </div>
         ) : (
           bubbles.map((b) => {
@@ -594,12 +596,18 @@ export default function PlayerView({
           left: '50%',
           transform: 'translateX(-50%)',
           zIndex: 1050,
-          color: 'rgba(255,255,255,0.65)',
+          color: 'rgba(255, 255, 255, 0.85)',
+          fontFamily: 'var(--font-tech)',
           fontSize: '0.95rem',
-          textShadow: '0 2px 4px rgba(0,0,0,0.8)',
-          pointerEvents: 'none'
+          textShadow: '0 2px 8px rgba(0,0,0,0.9)',
+          pointerEvents: 'none',
+          background: 'rgba(6, 9, 19, 0.6)',
+          backdropFilter: 'blur(10px)',
+          padding: '8px 20px',
+          borderRadius: '20px',
+          border: '1px solid var(--border-glass)'
         }}>
-          Hiện có <strong>{lobbyPlayers.length}</strong> phi hành gia đang lơ lửng trong vũ trụ này
+          Hiện có <strong style={{ color: 'var(--primary)' }}>{lobbyPlayers.length}</strong> người chơi đang lơ lửng trong vũ trụ
         </div>
       </div>
     );
@@ -710,42 +718,58 @@ export default function PlayerView({
     const colors = ['Đỏ (▲)', 'Xanh Dương (◆)', 'Vàng (●)', 'Xanh Lá (■)'];
 
     return (
-      <div className="fade-in" style={{
+      <div className="fade-in player-result-layout" style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: '85vh',
-        padding: '20px',
+        minHeight: 'calc(100vh - 120px)',
+        padding: '10px 16px',
         textAlign: 'center',
         background: isCorrect 
-          ? 'radial-gradient(circle, hsla(150, 90%, 20%, 0.4) 0%, transparent 70%)'
-          : 'radial-gradient(circle, hsla(355, 90%, 20%, 0.4) 0%, transparent 70%)',
+          ? 'radial-gradient(circle, hsla(150, 90%, 20%, 0.35) 0%, transparent 70%)'
+          : 'radial-gradient(circle, hsla(355, 90%, 20%, 0.35) 0%, transparent 70%)',
         transition: 'var(--transition-smooth)'
       }}>
-        <div className="glass-panel player-card" style={{
+        <div className="glass-panel player-feedback-card" style={{
+          width: '100%',
+          maxWidth: '420px',
+          padding: '24px 20px',
+          borderRadius: '24px',
           border: isCorrect ? '2px solid var(--color-green)' : '2px solid var(--color-red)',
-          boxShadow: isCorrect ? '0 0 25px var(--color-green-glow)' : '0 0 25px var(--color-red-glow)',
+          boxShadow: isCorrect ? '0 0 30px var(--color-green-glow)' : '0 0 30px var(--color-red-glow)',
+          display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          gap: '20px'
+          gap: '14px'
         }}>
-          <div style={{ fontSize: '5rem' }}>{isCorrect ? '🎉' : '❌'}</div>
+          <div style={{ fontSize: '3.6rem', lineHeight: 1 }}>{isCorrect ? '🎉' : '❌'}</div>
           
           <h2 style={{ 
-            fontSize: '2.5rem', 
-            fontWeight: '700',
+            fontSize: '1.8rem', 
+            fontWeight: '800',
+            fontFamily: 'var(--font-tech)',
+            margin: '0',
             color: isCorrect ? 'var(--color-green)' : 'var(--color-red)'
           }}>
-            {isCorrect ? 'Chính Xác!' : 'Sai Mất Rồi!'}
+            {isCorrect ? 'CHÍNH XÁC!' : 'SAI MẤT RỒI!'}
           </h2>
 
           {isCorrect ? (
-            <div style={{ fontSize: '1.8rem', fontWeight: 'bold' }}>
+            <div style={{ fontSize: '1.6rem', fontWeight: 'bold', color: 'var(--accent-emerald)', fontFamily: 'var(--font-tech)' }}>
               +{pointsGained} <span style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>điểm</span>
             </div>
           ) : (
-            <div style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>
-              Đáp án đúng là: <strong style={{ color: 'white' }}>{currentOptions[correctAnswerIndex] ? `${letters[correctAnswerIndex]} ${currentOptions[correctAnswerIndex]}` : (colors[correctAnswerIndex] || 'Không xác định')}</strong>
+            <div style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              padding: '10px 14px',
+              borderRadius: '12px',
+              color: 'var(--text-muted)',
+              fontSize: '0.9rem',
+              width: '100%'
+            }}>
+              Đáp án đúng là: <strong style={{ color: 'white', display: 'block', marginTop: '4px', fontSize: '0.95rem' }}>{currentOptions[correctAnswerIndex] ? `${letters[correctAnswerIndex]} ${currentOptions[correctAnswerIndex]}` : (colors[correctAnswerIndex] || 'Không xác định')}</strong>
             </div>
           )}
 
@@ -753,13 +777,13 @@ export default function PlayerView({
             <div style={{
               background: 'linear-gradient(135deg, #ff4500, #ff8c00)',
               color: 'white',
-              padding: '6px 16px',
-              borderRadius: '20px',
+              padding: '4px 14px',
+              borderRadius: '16px',
               fontWeight: 'bold',
-              fontSize: '1rem',
+              fontSize: '0.85rem',
               animation: 'pulse-glow 1.5s infinite ease-in-out'
             }}>
-              🔥 Chuỗi đúng liên tiếp: {streak}
+              🔥 Chuỗi đúng: {streak}
             </div>
           )}
 
@@ -767,17 +791,28 @@ export default function PlayerView({
             width: '100%', 
             height: '1px', 
             background: 'rgba(255,255,255,0.08)',
-            margin: '10px 0'
+            margin: '4px 0'
           }} />
 
-          <div style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>
-            Tổng số điểm: <strong style={{ color: 'white', fontSize: '1.4rem' }}>{totalScore} pts</strong>
+          <div style={{ fontSize: '1.05rem', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)' }}>
+            Tổng số điểm: <strong style={{ color: 'white', fontSize: '1.3rem' }}>{totalScore} pts</strong>
           </div>
         </div>
 
-        <p style={{ marginTop: '30px', color: 'var(--text-muted)' }}>
-          Hãy nhìn lên màn hình lớn để chờ Host chuẩn bị câu kế tiếp.
-        </p>
+        <div className="player-next-wait-badge" style={{
+          marginTop: '20px',
+          background: 'rgba(255, 255, 255, 0.04)',
+          border: '1px solid var(--border-glass)',
+          padding: '10px 16px',
+          borderRadius: '20px',
+          color: 'var(--text-muted)',
+          fontSize: '0.85rem',
+          fontFamily: 'var(--font-tech)',
+          backdropFilter: 'blur(10px)',
+          maxWidth: '380px'
+        }}>
+          👀 Hãy nhìn lên màn hình lớn để chờ Host chuyển câu tiếp theo...
+        </div>
       </div>
     );
   }

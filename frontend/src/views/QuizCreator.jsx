@@ -274,28 +274,54 @@ export default function QuizCreator({ onBackToDashboard }) {
   const labels = ['A (▲)', 'B (◆)', 'C (●)', 'D (■)'];
 
   return (
-    <div className="fade-in" style={{ maxWidth: '800px', margin: '20px auto', width: '100%' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: '700' }}>Tạo Bộ Câu Hỏi Mới</h2>
+    <div className="fade-in quiz-creator-container" style={{ maxWidth: '850px', margin: '10px auto', width: '100%' }}>
+      {/* Desktop Header */}
+      <div className="creator-header-desktop desktop-only" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
+        <div>
+          <h2 style={{ fontSize: '2rem', fontWeight: '800', fontFamily: 'var(--font-tech)', letterSpacing: '1px' }}>
+            CYBER QUIZ CREATOR STUDIO
+          </h2>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)' }}>
+            THIẾT KẾ VÀ THIẾT LẬP DỮ LIỆU CÂU HỎI TRẮC NGHIỆM
+          </div>
+        </div>
         <button className="neon-btn" onClick={onBackToDashboard} style={{
-          background: 'transparent',
+          background: 'rgba(0, 240, 255, 0.05)',
           border: '1px solid var(--border-glass)',
           boxShadow: 'none',
-          fontSize: '0.95rem',
-          color: 'var(--text-primary)'
+          fontSize: '0.85rem'
         }}>
-          Quay lại Dashboard
+          QUAY LẠI CONSOLE
         </button>
+      </div>
+
+      {/* Mobile Header Topbar */}
+      <div className="creator-header-mobile mobile-only" style={{ marginBottom: '16px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: '800', fontFamily: 'var(--font-tech)', margin: 0 }}>
+            ➕ TẠO BỘ ĐỀ THI MỚI
+          </h3>
+          <button className="neon-btn" onClick={onBackToDashboard} style={{
+            background: 'rgba(0, 240, 255, 0.05)',
+            border: '1px solid var(--border-glass)',
+            boxShadow: 'none',
+            fontSize: '0.8rem',
+            padding: '6px 12px'
+          }}>
+            ◀ Quay Lại
+          </button>
+        </div>
       </div>
 
       {error && (
         <div style={{
-          background: 'rgba(255, 69, 0, 0.1)',
+          background: 'rgba(255, 0, 85, 0.12)',
           border: '1px solid var(--color-red)',
           color: 'var(--color-red)',
-          padding: '12px',
-          borderRadius: '8px',
+          padding: '12px 16px',
+          borderRadius: '12px',
           marginBottom: '20px',
+          fontFamily: 'var(--font-tech)',
           textAlign: 'center'
         }}>
           ⚠️ {error}
@@ -303,12 +329,12 @@ export default function QuizCreator({ onBackToDashboard }) {
       )}
 
       {/* Khu vực Nhập đề nhanh từ file */}
-      <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-        <label style={{ display: 'block', fontSize: '1rem', fontWeight: '600', color: 'var(--text-muted)' }}>
-          NHẬP ĐỀ NHANH TỪ FILE (.txt hoặc .json)
-        </label>
+      <div className="glass-panel file-upload-card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
+        <div className="cyber-badge" style={{ alignSelf: 'flex-start' }}>
+          <span>📂</span> NHẬP DỮ LIỆU NHANH TỪ FILE (.TXT / .JSON)
+        </div>
         <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: 0 }}>
-          Hỗ trợ tải lên file <strong>.json</strong> (định dạng xuất từ app) hoặc file <strong>.txt</strong> soạn thảo chuẩn trắc nghiệm đơn giản.
+          Hỗ trợ tải lên file <strong>.json</strong> (định dạng chuẩn dữ liệu) hoặc file <strong>.txt</strong> soạn thảo đề thi đơn giản.
         </p>
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
           <input 
@@ -318,18 +344,15 @@ export default function QuizCreator({ onBackToDashboard }) {
             id="quiz-file-upload"
             style={{ display: 'none' }}
           />
-          <label htmlFor="quiz-file-upload" className="neon-btn" style={{
-            background: 'linear-gradient(135deg, var(--color-blue), hsl(190, 100%, 45%))',
-            boxShadow: '0 0 15px rgba(0, 191, 255, 0.3)',
-            fontSize: '0.95rem',
+          <label htmlFor="quiz-file-upload" className="neon-btn upload-file-btn" style={{
+            fontSize: '0.85rem',
             padding: '10px 20px',
             cursor: 'pointer',
             display: 'inline-block',
             margin: 0
           }}>
-            📂 Chọn File Trắc Nghiệm
+            📁 TẢI FILE DỮ LIỆU ĐỀ THI
           </label>
-
         </div>
       </div>
 

@@ -149,40 +149,43 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
 
   return (
     <div className="fade-in home-container">
-      <div className="home-grid" style={{ maxWidth: '380px', margin: '0 auto', width: '100%' }}>
-        {/* Lựa chọn Người chơi (Giao diện nhập trực tiếp) */}
+      <div className="home-grid" style={{ maxWidth: '400px', margin: '0 auto', width: '100%' }}>
+        {/* Lựa chọn Người chơi (Giao diện nhập PIN số) */}
         <div className="glass-panel home-card" style={{ cursor: 'default', width: '100%' }}>
           <div className="scene3d">
             <div className="cube3d cube-player">
-              <div className="cube-face front">🎮</div>
-              <div className="cube-face back">📱</div>
-              <div className="cube-face right">💬</div>
-              <div className="cube-face left">🕹️</div>
-              <div className="cube-face top">⭐</div>
-              <div className="cube-face bottom">🧠</div>
+              <div className="cube-face front">⚡</div>
+              <div className="cube-face back">🌐</div>
+              <div className="cube-face right">📡</div>
+              <div className="cube-face left">🛡️</div>
+              <div className="cube-face top">🚀</div>
+              <div className="cube-face bottom">💻</div>
             </div>
           </div>
-          {/* Đã xóa tiêu đề và mô tả người chơi */}
 
           {errorMsg && (
             <div style={{
-              background: 'rgba(255, 69, 0, 0.1)',
+              background: 'rgba(255, 0, 85, 0.12)',
               border: '1px solid var(--color-red)',
               color: 'var(--color-red)',
-              padding: '8px 12px',
-              borderRadius: '8px',
+              padding: '10px 14px',
+              borderRadius: '10px',
               fontSize: '0.85rem',
+              fontFamily: 'var(--font-tech)',
               width: '100%',
-              textAlign: 'center'
+              textAlign: 'center',
+              boxShadow: '0 0 12px var(--color-red-glow)'
             }}>
               ⚠️ {errorMsg}
             </div>
           )}
 
-          <form onSubmit={handleJoin} style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', marginTop: 'auto' }}>
+          <form onSubmit={handleJoin} style={{ display: 'flex', flexDirection: 'column', gap: '14px', width: '100%', marginTop: 'auto' }}>
             {!pinVerified ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', alignItems: 'center', width: '100%' }}>
-                <div className="pin-label-title">Mã PIN trò chơi</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center', width: '100%' }}>
+                <div className="pin-label-title">
+                  <span>🔒</span> MÃ PIN TRÒ CHƠI PING!
+                </div>
                 <div className="pin-inputs-container" onPaste={handlePinPaste}>
                   {pinArray.map((digit, idx) => (
                     <input
@@ -209,32 +212,30 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
                   style={{ 
                     width: '100%', 
                     padding: '14px',
-                    background: 'linear-gradient(135deg, #681eff, #8a2be2)',
-                    boxShadow: '0 0 15px rgba(104, 30, 255, 0.3)',
-                    marginTop: '10px',
                     fontSize: '1rem',
                     fontWeight: 'bold',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '10px'
+                    marginTop: '6px'
                   }}
                 >
                   {isConnected ? (
                     <>
-                      <span>Tham gia</span>
-                      <span style={{ fontSize: '1.2rem' }}>→</span>
+                      <span>XÁC NHẬN MÃ PIN</span>
+                      <span style={{ fontSize: '1.2rem' }}>⚡</span>
                     </>
                   ) : (
-                    'Đang kết nối...'
+                    'ĐANG KẾT NỐI HỆ THỐNG...'
                   )}
                 </button>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div className="cyber-badge success" style={{ width: '100%', justifyContent: 'center', padding: '8px' }}>
+                  ✓ ĐÃ XÁC THỰC PHÒNG CHƠI #PIN-{pin}
+                </div>
+
                 <input 
                   type="text" 
-                  placeholder="Nickname của bạn..." 
+                  placeholder="Nhập Cyber Nickname..." 
                   value={nickname}
                   onChange={(e) => setNickname(e.target.value.slice(0, 15))}
                   maxLength={15}
@@ -248,7 +249,7 @@ export default function HomeView({ onSelectRole, lastMessage, sendMessage, isCon
                   className="neon-btn nickname-submit-btn"
                   disabled={!isConnected || isJoining}
                 >
-                  {isJoining ? 'Đang vào...' : 'Tham Gia Phòng'}
+                  {isJoining ? 'ĐANG KẾT NỐI...' : 'KÍCH HOẠT THAM GIA'}
                 </button>
               </div>
             )}

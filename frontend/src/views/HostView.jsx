@@ -529,47 +529,90 @@ export default function HostView({
     );
   };
 
-  // 1. MÀN HÌNH DASHBOARD TRUNG TÂM
+  // 1. MÀN HÌNH DASHBOARD TRUNG TÂM CONTROL CENTER
   if (hostState === 'DASHBOARD') {
     return (
-      <div className="fade-in" style={{ maxWidth: '800px', margin: '20px auto', width: '100%' }}>
-        <div className="host-dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '2rem', fontWeight: '700' }}>Host Dashboard</h2>
+      <div className="fade-in host-dashboard-container" style={{ maxWidth: '850px', margin: '10px auto', width: '100%' }}>
+        {/* Desktop Header */}
+        <div className="host-dashboard-header desktop-only" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
+          <div>
+            <h2 style={{ fontSize: '2rem', fontWeight: '800', fontFamily: 'var(--font-tech)', letterSpacing: '1px' }}>
+              CYBER CONTROL CENTER
+            </h2>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)' }}>
+              QUẢN LÝ BỘ ĐỀ THI VÀ PHÒNG ĐIỀU KHIỂN GAME
+            </div>
+          </div>
           <div className="host-dashboard-buttons" style={{ display: 'flex', gap: '12px' }}>
-            <button className="neon-btn" onClick={() => onNavigate('CREATE_QUIZ')} style={{
-              background: 'linear-gradient(135deg, var(--secondary), hsl(280, 100%, 55%))',
-              boxShadow: '0 0 15px rgba(162, 0, 255, 0.3)'
-            }}>
-              ➕ Tạo Đề Mới
+            <button className="neon-btn" onClick={() => onNavigate('CREATE_QUIZ')} style={{ fontSize: '0.9rem' }}>
+              ➕ TẠO ĐỀ MỚI
             </button>
             
             <button className="neon-btn" onClick={() => onNavigate('HISTORY')} style={{
-              background: 'transparent',
-              border: '1px solid rgba(255,255,255,0.1)',
-              boxShadow: 'none'
+              background: 'rgba(0, 240, 255, 0.05)',
+              border: '1px solid var(--border-glass)',
+              boxShadow: 'none',
+              fontSize: '0.9rem'
             }}>
-              📅 Lịch Sử
+              📊 LỊCH SỬ DỮ LIỆU
             </button>
 
             <button className="neon-btn" onClick={onBackToHome} style={{
-              background: 'rgba(255, 69, 0, 0.1)',
+              background: 'rgba(255, 0, 85, 0.1)',
               border: '1px solid var(--color-red)',
               color: 'var(--color-red)',
-              boxShadow: 'none'
+              boxShadow: 'none',
+              fontSize: '0.9rem'
             }}>
-              Thoát Host
+              THOÁT CONSOLE
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Compact Top Bar */}
+        <div className="host-mobile-topbar mobile-only">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: '800', fontFamily: 'var(--font-tech)', margin: 0 }}>
+              🎮 DANH SÁCH BỘ ĐỀ ({quizzes.length})
+            </h3>
+            <button className="neon-btn" onClick={() => onNavigate('CREATE_QUIZ')} style={{ fontSize: '0.8rem', padding: '7px 12px' }}>
+              ➕ Tạo Đề Mới
+            </button>
+          </div>
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+            <button className="neon-btn" onClick={() => onNavigate('HISTORY')} style={{
+              flex: 1,
+              background: 'rgba(0, 240, 255, 0.05)',
+              border: '1px solid var(--border-glass)',
+              boxShadow: 'none',
+              fontSize: '0.8rem',
+              padding: '8px 10px',
+              justifyContent: 'center'
+            }}>
+              📊 Lịch Sử Trận Đấu
+            </button>
+            <button className="neon-btn" onClick={onBackToHome} style={{
+              background: 'rgba(255, 0, 85, 0.1)',
+              border: '1px solid var(--color-red)',
+              color: 'var(--color-red)',
+              boxShadow: 'none',
+              fontSize: '0.8rem',
+              padding: '8px 12px'
+            }}>
+              🚪 Thoát
             </button>
           </div>
         </div>
 
         {quizError && (
           <div style={{
-            background: 'rgba(255, 69, 0, 0.1)',
+            background: 'rgba(255, 0, 85, 0.12)',
             border: '1px solid var(--color-red)',
             color: 'var(--color-red)',
-            padding: '12px',
-            borderRadius: '8px',
+            padding: '12px 16px',
+            borderRadius: '12px',
             marginBottom: '20px',
+            fontFamily: 'var(--font-tech)',
             textAlign: 'center'
           }}>
             ⚠️ {quizError}
@@ -577,15 +620,15 @@ export default function HostView({
         )}
 
         {loadingQuizzes ? (
-          <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: '2.5rem', animation: 'pulse-glow 1s infinite linear' }}>⏳</div>
-            Đang tải danh sách câu hỏi...
+          <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)' }}>
+            <div style={{ fontSize: '2.5rem', animation: 'pulse-glow 1s infinite linear' }}>⚡</div>
+            ĐANG KẾT NỐI VÀ TẢI DỮ LIỆU BỘ ĐỀ...
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            <h3 style={{ fontSize: '1.2rem', color: 'var(--text-muted)', fontWeight: '600' }}>
-              CHỌN MỘT BỘ ĐỀ ĐỂ BẮT ĐẦU CHƠI:
-            </h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div className="cyber-badge desktop-only" style={{ alignSelf: 'flex-start' }}>
+              <span>📑</span> KHO DỮ LIỆU ĐỀ THI HỆ THỐNG ({quizzes.length})
+            </div>
 
             {quizzes.map((quiz) => (
               <div 
@@ -593,7 +636,7 @@ export default function HostView({
                 className="glass-panel quiz-item-row" 
                 onClick={() => handleLaunchQuiz(quiz)}
                 style={{
-                  padding: '24px 30px',
+                  padding: '20px 24px',
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
@@ -602,32 +645,32 @@ export default function HostView({
                 }}
               >
                 <div>
-                  <h4 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '6px' }}>
+                  <h4 style={{ fontSize: '1.25rem', fontWeight: '700', marginBottom: '4px' }}>
                     {quiz.title}
                   </h4>
-                  <div style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                    📝 Số câu hỏi: <strong>{quiz.questions.length} câu</strong>
+                  <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)' }}>
+                    📝 DUNG LƯỢNG: <strong>{quiz.questions.length} CÂU HỎI</strong>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                  <button className="neon-btn" style={{ fontSize: '0.95rem', padding: '8px 20px' }}>
-                    Khởi Chạy Game 🎮
+                <div className="quiz-item-actions" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                  <button className="neon-btn quiz-launch-btn" style={{ fontSize: '0.95rem', padding: '12px 24px', fontWeight: '800' }}>
+                    ⚡ BẮT ĐẦU PHÒNG
                   </button>
                   
                   <button 
-                    className="neon-btn" 
+                    className="neon-btn quiz-delete-btn" 
                     onClick={(e) => handleDeleteQuiz(quiz.id, e)}
                     style={{
-                      background: 'rgba(255, 69, 0, 0.1)',
+                      background: 'rgba(255, 0, 85, 0.1)',
                       border: '1px solid var(--color-red)',
                       color: 'var(--color-red)',
                       boxShadow: 'none',
-                      fontSize: '0.9rem',
-                      padding: '8px 16px'
+                      fontSize: '0.85rem',
+                      padding: '10px 16px'
                     }}
                   >
-                    Xóa
+                    XÓA
                   </button>
                 </div>
               </div>
@@ -651,6 +694,8 @@ export default function HostView({
       >
         <div className="space-stars"></div>
         <div className="space-nebula"></div>
+        <div className="cyber-grid-overlay"></div>
+        <div className="cyber-scanline"></div>
 
         {/* 3. CARD THÔNG TIN PHÒNG CHỜ (Mã PIN, QR Code, Số lượng người chơi) */}
         <div className="glass-panel lobby-card" style={{
@@ -678,10 +723,18 @@ export default function HostView({
             width: '100%',
             textAlign: 'center',
             paddingBottom: '16px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.1)'
+            borderBottom: '1px solid var(--border-glass)'
           }}>
-            <div style={{ fontSize: '3.6rem', fontWeight: '700', color: 'white', letterSpacing: '4px', margin: 0, lineHeight: 1.1 }}>
-              PIN: <span style={{ color: '#ffd700' }}>{pin}</span>
+            <div className="lobby-pin-number" style={{
+              fontFamily: 'var(--font-tech)',
+              fontWeight: '800',
+              color: 'white',
+              letterSpacing: '3px',
+              margin: 0,
+              lineHeight: 1.1,
+              textShadow: '0 0 20px var(--primary-glow)'
+            }}>
+              PIN: <span style={{ color: 'var(--primary)' }}>{pin}</span>
             </div>
           </div>
 
@@ -701,10 +754,11 @@ export default function HostView({
               flex: '1'
             }}>
               <div style={{
-                background: 'white',
-                padding: '10px',
-                borderRadius: '12px',
-                boxShadow: '0 0 15px rgba(255, 255, 255, 0.1)'
+                background: '#ffffff',
+                padding: '12px',
+                borderRadius: '16px',
+                boxShadow: '0 0 25px var(--primary-glow)',
+                border: '2px solid var(--primary)'
               }}>
                 <img 
                   src={qrUrl} 
@@ -713,13 +767,13 @@ export default function HostView({
                   loading="lazy"
                 />
               </div>
-              <div style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.7)', fontWeight: 'bold' }}>
-                📸 Quét để vào nhanh!
+              <div style={{ fontSize: '0.8rem', color: 'var(--primary)', fontFamily: 'var(--font-tech)', fontWeight: 'bold' }}>
+                📲 QUÉT QR THAM GIA
               </div>
             </div>
 
             {/* Đường ngăn cách dọc tinh tế */}
-            <div className="lobby-divider" style={{ width: '1px', height: '140px', background: 'rgba(255, 255, 255, 0.1)' }}></div>
+            <div className="lobby-divider" style={{ width: '1px', height: '140px', background: 'var(--border-glass)' }}></div>
 
             {/* Cột phải: Thông số người chơi & Cụm nút bấm */}
             <div className="lobby-controls" style={{
@@ -730,11 +784,11 @@ export default function HostView({
               flex: '1.2'
             }}>
               <div className="lobby-controls-stats" style={{ textAlign: 'center' }}>
-                <div className="lobby-controls-stats-label" style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.6)', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                  <span className="desktop-text">Người chơi tham gia:</span>
-                  <span className="mobile-text">Người chơi:</span>
+                <div className="lobby-controls-stats-label" style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                  <span className="desktop-text">NGƯỜI CHƠI TRONG PHÒNG:</span>
+                  <span className="mobile-text">NGƯỜI CHƠI:</span>
                 </div>
-                <div className="lobby-controls-stats-value" style={{ fontSize: '2.8rem', fontWeight: '700', color: 'var(--primary)', margin: '4px 0 0 0', lineHeight: 1 }}>
+                <div className="lobby-controls-stats-value" style={{ fontSize: '2.8rem', fontWeight: '800', fontFamily: 'var(--font-tech)', color: 'var(--accent-emerald)', textShadow: '0 0 15px var(--accent-emerald-glow)', margin: '4px 0 0 0', lineHeight: 1 }}>
                   {totalPlayers}
                 </div>
               </div>
@@ -746,14 +800,14 @@ export default function HostView({
                   disabled={totalPlayers === 0}
                   style={{ 
                     width: '100%',
-                    opacity: totalPlayers === 0 ? 0.6 : 1,
+                    opacity: totalPlayers === 0 ? 0.5 : 1,
                     cursor: totalPlayers === 0 ? 'not-allowed' : 'pointer',
                     fontSize: '0.9rem',
-                    padding: '10px 14px'
+                    padding: '12px 14px'
                   }}
                 >
-                  <span className="desktop-text">Bắt đầu trò chơi</span>
-                  <span className="mobile-text">Bắt đầu</span>
+                  <span className="desktop-text">KÍCH HOẠT TRẬN ĐẤU</span>
+                  <span className="mobile-text">BẮT ĐẦU</span>
                 </button>
                 
                 <button 
@@ -761,14 +815,15 @@ export default function HostView({
                   onClick={handleCancelRoom}
                   style={{
                     width: '100%',
-                    background: 'transparent',
-                    border: '1px solid rgba(255,255,255,0.2)',
+                    background: 'rgba(255, 0, 85, 0.1)',
+                    border: '1px solid var(--color-red)',
+                    color: 'var(--color-red)',
                     boxShadow: 'none',
-                    fontSize: '0.9rem',
+                    fontSize: '0.85rem',
                     padding: '8px 14px'
                   }}
                 >
-                  Hủy Phòng
+                  HỦY PHÒNG CHƠI
                 </button>
               </div>
             </div>
@@ -825,23 +880,24 @@ export default function HostView({
     return (
       <div className="fade-in host-game-layout">
         <div className="host-header-bar">
-          <div style={{ fontSize: '1.2rem', color: 'var(--text-muted)' }}>
-            Câu hỏi: <span style={{ color: 'white', fontWeight: 'bold' }}>{questionIndex + 1}/{totalQuestions}</span>
+          <div style={{ fontSize: '1rem', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)' }}>
+            CÂU: <span style={{ color: 'white', fontWeight: 'bold' }}>{questionIndex + 1}/{totalQuestions}</span>
           </div>
           <div style={{
-            background: 'rgba(255, 255, 255, 0.1)',
-            padding: '6px 16px',
-            borderRadius: '20px',
-            fontSize: '0.95rem'
+            background: 'rgba(255, 255, 255, 0.08)',
+            padding: '4px 14px',
+            borderRadius: '16px',
+            fontSize: '0.85rem',
+            fontFamily: 'var(--font-tech)'
           }}>
-            PIN: <strong>{pin}</strong>
+            🔑 PIN: <strong>{pin}</strong>
           </div>
           <button className="neon-btn" onClick={handleSkipQuestion} style={{
             background: 'rgba(255, 255, 255, 0.05)',
             border: '1px solid rgba(255, 255, 255, 0.1)',
             boxShadow: 'none',
-            padding: '6px 16px',
-            fontSize: '0.9rem'
+            padding: '5px 12px',
+            fontSize: '0.8rem'
           }}>
             Bỏ Qua
           </button>
@@ -853,16 +909,16 @@ export default function HostView({
 
         <div className="host-status-row">
           <div className="host-status-box">
-            <div className="host-status-label">Thời gian còn lại</div>
+            <div className="host-status-label">THỜI GIAN CÒN LẠI</div>
             <div className={`host-status-value ${timeLeft <= 5 && timeLeft > 0 ? 'warning' : ''}`}>
               {currentQuestion.timeLimit === 0 ? '∞' : timeLeft}
             </div>
           </div>
 
           <div className="host-status-box">
-            <div className="host-status-label">Câu trả lời nhận được</div>
+            <div className="host-status-label">ĐÃ TRẢ LỜI</div>
             <div className="host-status-value primary">
-              {totalAnswers}<span style={{ fontSize: '1.2rem', color: 'var(--text-muted)', fontWeight: '400' }}>/{totalPlayers}</span>
+              {totalAnswers}<span style={{ fontSize: '1.1rem', color: 'var(--text-muted)', fontWeight: '400' }}>/{totalPlayers}</span>
             </div>
           </div>
         </div>
@@ -871,7 +927,7 @@ export default function HostView({
           {currentQuestion.options.map((option, idx) => (
             <div key={idx} className={`answer-option host-answer-option ${colors[idx]}`} style={{ cursor: 'default' }}>
               <span className="shape-icon">{letters[idx]}</span>
-              <span style={{ flex: 1, wordBreak: 'break-word', textAlign: 'left' }}>{option}</span>
+              <span className="option-text-content">{option}</span>
             </div>
           ))}
         </div>
@@ -888,15 +944,14 @@ export default function HostView({
     return (
       <div className="fade-in host-game-layout">
         <div className="host-header-bar">
-          <div style={{ fontSize: '1.4rem', fontWeight: '700' }}>Kết Quả Câu Hỏi</div>
-          <button className="neon-btn" onClick={handleShowLeaderboard} style={{ padding: '8px 20px', fontSize: '0.95rem' }}>
-            Xem Bảng Xếp Hạng
+          <div style={{ fontSize: '1.2rem', fontWeight: '700' }}>Kết Quả Câu Hỏi</div>
+          <button className="neon-btn" onClick={handleShowLeaderboard} style={{ padding: '8px 18px', fontSize: '0.85rem' }}>
+            🏆 Xem Xếp Hạng
           </button>
         </div>
 
-        <div className="glass-panel host-question-card" style={{ padding: '16px 20px' }}>
-          <h2 style={{ fontSize: '1.1rem', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Câu hỏi:</h2>
-          <h3 className="host-question-title" style={{ fontSize: '1.5rem' }}>{currentQuestion.questionText}</h3>
+        <div className="glass-panel host-question-card result-question-card" style={{ padding: '8px 16px' }}>
+          <h3 className="host-question-title" style={{ fontSize: '1.2rem' }}>{currentQuestion.questionText}</h3>
         </div>
 
         <div className="glass-panel host-chart-container">
@@ -904,32 +959,29 @@ export default function HostView({
             const heightPercentage = (count / maxAnswers) * 80;
             const isCorrect = idx === correctAnswerIndex;
             return (
-              <div key={idx} style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                width: '15%',
-                height: '100%',
-                justifyContent: 'flex-end'
-              }}>
-                <div style={{ fontSize: '1.1rem', fontWeight: 'bold', marginBottom: '6px' }}>{count}</div>
-                <div className={`answer-option ${colors[idx]}`} style={{
-                  width: '100%',
-                  height: `${Math.max(10, heightPercentage)}%`,
-                  padding: '5px',
-                  justifyContent: 'center',
-                  borderRadius: '8px 8px 0 0',
-                  boxShadow: isCorrect ? '0 0 20px rgba(255,255,255,0.4)' : 'none',
-                  border: isCorrect ? '3px solid white' : 'none'
-                }}>
-                  <span style={{ fontSize: '1.1rem' }}>{letters[idx]}</span>
+              <div key={idx} className="host-chart-col">
+                {/* Số lượt chọn ở đỉnh cột */}
+                <div className="host-chart-count">
+                  {count}
                 </div>
-                <div style={{ 
-                  marginTop: '6px', 
-                  fontSize: '0.9rem',
-                  fontWeight: isCorrect ? 'bold' : 'normal',
-                  color: isCorrect ? 'white' : 'var(--text-muted)'
-                }}>
+
+                {/* Cột Bar vươn cao */}
+                <div className="host-chart-bar-wrapper">
+                  <div 
+                    className={`chart-bar ${colors[idx]} ${isCorrect ? 'is-correct' : ''}`}
+                    style={{
+                      height: `${Math.max(8, heightPercentage)}%`
+                    }}
+                  />
+                </div>
+
+                {/* Biểu tượng hình khối chân cột */}
+                <div className={`host-chart-icon-badge ${colors[idx]}`}>
+                  {letters[idx]}
+                </div>
+
+                {/* Nhãn xác nhận đáp án đúng */}
+                <div className="host-chart-correct-label">
                   {isCorrect ? '✅ Đúng' : ''}
                 </div>
               </div>
@@ -937,7 +989,7 @@ export default function HostView({
           })}
         </div>
 
-        <div className="answers-grid host-answers-grid">
+        <div className="answers-grid host-answers-grid result-grid">
           {currentQuestion.options.map((option, idx) => {
             const isCorrect = idx === correctAnswerIndex;
             return (
@@ -947,14 +999,14 @@ export default function HostView({
                 style={{ 
                   cursor: 'default',
                   opacity: isCorrect ? 1 : 0.4,
-                  transform: isCorrect ? 'scale(1.02)' : 'none',
-                  border: isCorrect ? '3px solid white' : 'none',
+                  transform: isCorrect ? 'scale(1.01)' : 'none',
+                  border: isCorrect ? '2px solid white' : 'none',
                   boxShadow: isCorrect ? '0 0 20px rgba(255,255,255,0.2)' : 'none'
                 }}
               >
                 <span className="shape-icon">{letters[idx]}</span>
-                <span style={{ flex: 1, wordBreak: 'break-word', textAlign: 'left' }}>{option}</span>
-                {isCorrect && <span style={{ marginLeft: 'auto', fontSize: '1.3rem' }}>✓</span>}
+                <span className="option-text-content">{option}</span>
+                {isCorrect && <span style={{ marginLeft: 'auto', fontSize: '1.2rem', fontWeight: 'bold' }}>✓</span>}
               </div>
             );
           })}
@@ -966,65 +1018,49 @@ export default function HostView({
   // 5. MÀN HÌNH BẢNG XẾP HẠNG TẠM THỜI (LEADERBOARD)
   if (hostState === 'LEADERBOARD') {
     return (
-      <div className="fade-in" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: '30px', padding: '20px' }}>
-        <h2 style={{ fontSize: '3rem', fontWeight: '700', background: 'linear-gradient(to right, #a200ff, #ff007f)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+      <div className="fade-in leaderboard-container">
+        <h2 className="leaderboard-title">
           Bảng Xếp Hạng
         </h2>
 
-        <div className="glass-panel" style={{
-          width: '100%',
-          maxWidth: '700px',
-          padding: '20px 0'
-        }}>
+        <div className="glass-panel leaderboard-box">
           {leaderboard.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>Chưa có điểm số nào được ghi nhận.</div>
+            <div style={{ textAlign: 'center', padding: '30px', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)' }}>
+              Chưa có điểm số nào được ghi nhận.
+            </div>
           ) : (
             leaderboard.map((item, idx) => (
               <div 
                 key={item.nickname} 
+                className="leaderboard-item-row"
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '16px 30px',
                   borderBottom: idx < leaderboard.length - 1 ? '1px solid rgba(255, 255, 255, 0.05)' : 'none',
-                  background: idx === 0 ? 'rgba(255, 255, 255, 0.02)' : 'transparent',
-                  animation: 'fadeIn 0.4s ease'
+                  background: idx === 0 ? 'rgba(255, 255, 255, 0.03)' : 'transparent'
                 }}
               >
-                <div style={{
-                  fontSize: '1.5rem',
-                  fontWeight: 'bold',
-                  width: '40px',
+                <div className="leaderboard-rank" style={{
                   color: idx === 0 ? '#ffd700' : idx === 1 ? '#c0c0c0' : idx === 2 ? '#cd7f32' : 'var(--text-muted)'
                 }}>
-                  {idx + 1}
+                  {idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : `${idx + 1}`}
                 </div>
-                <div style={{ fontSize: '1.3rem', fontWeight: '600', flex: 1 }}>
+                <div className="leaderboard-nick">
                   {item.nickname}
                   {item.streak > 1 && (
-                    <span style={{
-                      marginLeft: '10px',
-                      background: 'linear-gradient(135deg, #ff4500, #ff8c00)',
-                      color: 'white',
-                      padding: '2px 8px',
-                      borderRadius: '12px',
-                      fontSize: '0.8rem',
-                      fontWeight: 'bold'
-                    }}>
-                      🔥 Chuỗi {item.streak}
+                    <span className="streak-badge">
+                      🔥 {item.streak}
                     </span>
                   )}
                 </div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 'bold', color: 'var(--primary)' }}>
-                  {item.score} pts
+                <div className="leaderboard-score">
+                  {item.score} <span style={{ fontSize: '0.8rem', opacity: 0.7 }}>pts</span>
                 </div>
               </div>
             ))
           )}
         </div>
 
-        <button className="neon-btn" onClick={handleNextQuestion}>
-          {questionIndex + 1 >= totalQuestions ? 'Xem Podium Chung Cuộc' : 'Câu Hỏi Tiếp Theo'}
+        <button className="neon-btn leaderboard-action-btn" onClick={handleNextQuestion}>
+          {questionIndex + 1 >= totalQuestions ? '🏆 Xem Podium Chung Cuộc' : '⚡ Câu Hỏi Tiếp Theo'}
         </button>
       </div>
     );

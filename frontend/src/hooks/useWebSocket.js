@@ -2,17 +2,16 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 
 /**
  * Custom hook quản lý kết nối WebSocket realtime với server.
- * Tự động kết nối lại khi mất mạng, xử lý tin nhắn có cấu trúc.
+ * Tự động kết nối lại liên tục khi mất mạng, xử lý tin nhắn có cấu trúc.
  * @param {string} url - Địa chỉ URL của WebSocket Server
  * @param {Function} onMessageReceived - Callback gọi khi nhận được tin nhắn từ Server
- * @returns {Object} { isConnected, error, sendMessage }
+ * @returns {Object} { isConnected, error, sendMessage, connect }
  */
 export function useWebSocket(url, onMessageReceived) {
   const [isConnected, setIsConnected] = useState(false);
   const [error, setError] = useState(null);
   const socketRef = useRef(null);
   const reconnectTimeoutRef = useRef(null);
-  const maxReconnectAttempts = 5;
   const reconnectAttemptRef = useRef(0);
 
   // Lưu trữ callback bằng ref để tránh re-trigger effect khi callback thay đổi
@@ -22,11 +21,20 @@ export function useWebSocket(url, onMessageReceived) {
   }, [onMessageReceived]);
 
   const connect = useCallback(() => {
-    // Sửa lỗi: Không thực hiện kết nối nếu URL trống
     if (!url) return;
 
-    if (socketRef.current && socketRef.current.readyState !== WebSocket.CLOSED) {
-      return; // Đã hoặc đang kết nối
+    if (socketRef.current) {
+      if (socketRef.current.readyState === WebSocket.OPEN) {
+        setIsConnected(true);
+        return;
+      }
+      if (socketRef.current.readyState === WebSocket.CONNECTING) {
+        return;
+      }
+      // Dọn dẹp socket cũ nếu đã đóng
+      try {
+        socketRef.current.close();
+      } catch (e) {}
     }
 
     console.log(`[WS] Đang kết nối tới ${url}...`);
@@ -38,7 +46,7 @@ export function useWebSocket(url, onMessageReceived) {
         console.log('[WS] Kết nối thành công.');
         setIsConnected(true);
         setError(null);
-        reconnectAttemptRef.current = 0; // reset số lần thử
+        reconnectAttemptRef.current = 0;
       };
 
       socket.onmessage = (event) => {
@@ -58,20 +66,20 @@ export function useWebSocket(url, onMessageReceived) {
       };
 
       socket.onclose = (event) => {
-        console.log('[WS] Kết nối bị đóng. Lý do:', event.reason || 'Không rõ');
+        console.log('[WS] Kết nối bị đóng. Code:', event.code, 'Lý do:', event.reason || 'Không rõ');
         setIsConnected(false);
+        socketRef.current = null;
         
-        // Nếu không phải đóng chủ động, tiến hành kết nối lại
-        if (event.code !== 1000 && reconnectAttemptRef.current < maxReconnectAttempts) {
-          const delay = Math.min(1000 * Math.pow(2, reconnectAttemptRef.current), 10000);
-          console.log(`[WS] Thử kết nối lại sau ${delay / 1000} giây (Lần ${reconnectAttemptRef.current + 1}/${maxReconnectAttempts})...`);
+        // Tiến hành tự động thử kết nối lại liên tục (trì hoãn tối đa 3-5 giây)
+        if (event.code !== 1000) {
+          const delay = Math.min(1000 * Math.pow(1.5, reconnectAttemptRef.current), 4000);
+          console.log(`[WS] Thử kết nối lại sau ${(delay / 1000).toFixed(1)} giây...`);
           
+          if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
           reconnectTimeoutRef.current = setTimeout(() => {
             reconnectAttemptRef.current += 1;
             connect();
           }, delay);
-        } else if (reconnectAttemptRef.current >= maxReconnectAttempts) {
-          setError('Không thể kết nối đến máy chủ. Vui lòng làm mới trang.');
         }
       };
     } catch (e) {
@@ -86,17 +94,17 @@ export function useWebSocket(url, onMessageReceived) {
       socketRef.current.send(JSON.stringify(data));
       return true;
     }
-    console.warn('[WS] Chưa kết nối, không thể gửi tin nhắn.');
+    // Nếu chưa kết nối, thử kích hoạt kết nối lại ngay lập tức
+    console.warn('[WS] Chưa kết nối, đang thử kích hoạt kết nối lại...');
+    connect();
     return false;
-  }, []);
+  }, [connect]);
 
   // Khởi chạy kết nối
   useEffect(() => {
-    // Sửa lỗi: Chỉ kết nối khi có URL hợp lệ
     if (url) {
       connect();
     } else {
-      // Nếu URL bị xóa (ví dụ quay về SELECT role), dọn dẹp các kết nối cũ nếu có
       setIsConnected(false);
       setError(null);
       if (socketRef.current) {
@@ -105,17 +113,15 @@ export function useWebSocket(url, onMessageReceived) {
       }
     }
 
-    // Dọn dẹp khi unmount
     return () => {
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
       if (socketRef.current) {
-        // Đóng chủ động với code 1000 để tránh auto-reconnect
         socketRef.current.close(1000, 'Component unmounted');
       }
     };
   }, [connect, url]);
 
-  return { isConnected, error, sendMessage };
+  return { isConnected, error, sendMessage, connect };
 }

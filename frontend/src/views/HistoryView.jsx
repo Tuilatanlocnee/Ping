@@ -48,39 +48,46 @@ export default function HistoryView({ onBackToDashboard }) {
 
   return (
     <div className="fade-in" style={{ maxWidth: '850px', margin: '20px auto', width: '100%' }}>
-      <div className="history-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '2rem', fontWeight: '700' }}>Lịch Sử Các Trận Đấu</h2>
+      <div className="history-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
+        <div>
+          <h2 style={{ fontSize: '2rem', fontWeight: '800', fontFamily: 'var(--font-tech)', letterSpacing: '1px' }}>
+            CYBER DATA HISTORY
+          </h2>
+          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)' }}>
+            LỊCH SỬ CÁC TRẬN ĐẤU ĐÃ DIỄN RA TRÊN HỆ THỐNG
+          </div>
+        </div>
         <button className="neon-btn" onClick={onBackToDashboard} style={{
-          background: 'transparent',
+          background: 'rgba(0, 240, 255, 0.05)',
           border: '1px solid var(--border-glass)',
           boxShadow: 'none',
-          fontSize: '0.95rem',
-          color: 'var(--text-primary)'
+          fontSize: '0.85rem'
         }}>
-          Quay lại Dashboard
+          QUAY LẠI CONSOLE
         </button>
       </div>
 
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: '2.5rem', animation: 'pulse-glow 1s infinite linear' }}>⏳</div>
-          Đang tải dữ liệu lịch sử...
+        <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)' }}>
+          <div style={{ fontSize: '2.5rem', animation: 'pulse-glow 1s infinite linear' }}>⚡</div>
+          ĐANG TRUY XUẤT LỊCH SỬ TRẬN ĐẤU...
         </div>
       ) : error ? (
         <div style={{
-          background: 'rgba(255, 69, 0, 0.1)',
+          background: 'rgba(255, 0, 85, 0.12)',
           border: '1px solid var(--color-red)',
           color: 'var(--color-red)',
-          padding: '12px',
-          borderRadius: '8px',
+          padding: '12px 16px',
+          borderRadius: '12px',
+          fontFamily: 'var(--font-tech)',
           textAlign: 'center'
         }}>
           ⚠️ {error}
         </div>
       ) : historyList.length === 0 ? (
-        <div className="glass-panel" style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '10px' }}>🎮</div>
-          Chưa có trận đấu nào được ghi nhận. Hãy tạo phòng chơi để bắt đầu lưu lịch sử!
+        <div className="glass-panel" style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)' }}>
+          <div style={{ fontSize: '3rem', marginBottom: '10px' }}>⚡</div>
+          CHƯA CÓ TRẬN ĐẤU NÀO ĐƯỢC GHI NHẬN TRONG HỆ THỐNG.
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -98,38 +105,29 @@ export default function HistoryView({ onBackToDashboard }) {
                   <h3 style={{ fontSize: '1.3rem', fontWeight: '700', marginBottom: '8px' }}>
                     {item.quizTitle}
                   </h3>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                    <span>📅 Thời gian: <strong>{formatDate(item.playedAt)}</strong></span>
-                    <span>🔑 PIN: <strong>{item.pin}</strong></span>
-                    <span>👥 Số người chơi: <strong>{item.totalPlayers}</strong></span>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', fontSize: '0.85rem', color: 'var(--text-muted)', fontFamily: 'var(--font-tech)' }}>
+                    <span>📅 THỜI GIAN: <strong>{formatDate(item.playedAt)}</strong></span>
+                    <span>🔑 PIN: <strong>#{item.pin}</strong></span>
+                    <span>👥 THÀNH VIÊN: <strong>{item.totalPlayers}</strong></span>
                   </div>
                 </div>
 
                 {winner ? (
-                  <div style={{
-                    background: 'rgba(255, 215, 0, 0.08)',
-                    border: '1px solid rgba(255, 215, 0, 0.2)',
-                    padding: '10px 16px',
-                    borderRadius: '12px',
-                    textAlign: 'right',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px'
-                  }}>
-                    <span style={{ fontSize: '1.8rem' }}>👑</span>
+                  <div className="cyber-badge success" style={{ padding: '10px 16px', gap: '10px' }}>
+                    <span style={{ fontSize: '1.6rem' }}>👑</span>
                     <div style={{ textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>QUÁN QUÂN</div>
-                      <div style={{ fontWeight: 'bold', fontSize: '1.05rem', color: '#ffd700' }}>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>CHAMPION</div>
+                      <div style={{ fontWeight: '800', fontSize: '1.05rem', color: 'var(--accent-emerald)' }}>
                         {winner.nickname}
                       </div>
-                      <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                        {winner.score} pts
+                      <div style={{ fontSize: '0.8rem', color: 'var(--primary)' }}>
+                        {winner.score} PTS
                       </div>
                     </div>
                   </div>
                 ) : (
-                  <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem' }}>
-                    Không có người chơi tham gia
+                  <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', fontFamily: 'var(--font-tech)' }}>
+                    KHÔNG CÓ NGƯỜI CHƠI
                   </div>
                 )}
               </div>

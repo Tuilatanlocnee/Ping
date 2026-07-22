@@ -77,7 +77,7 @@ function App() {
   }, []);
 
   // Luôn luôn kết nối WebSocket để hỗ trợ kiểm tra mã PIN ngay tại trang chủ
-  const { isConnected, error, sendMessage } = useWebSocket(
+  const { isConnected, error, sendMessage, connect } = useWebSocket(
     getWSUrl(),
     handleMessageReceived
   );
@@ -118,36 +118,55 @@ function App() {
       minHeight: '100vh',
       width: '100%'
     }}>
-      {/* Header nhỏ hiển thị trạng thái kết nối */}
+      {/* Header High-Tech Console hiển thị trạng thái kết nối */}
       <header style={{
-        padding: '16px 24px',
+        padding: '14px 28px',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
-        background: 'rgba(0, 0, 0, 0.2)',
-        backdropFilter: 'blur(8px)'
+        borderBottom: '1px solid var(--border-glass)',
+        background: 'rgba(6, 9, 19, 0.75)',
+        backdropFilter: 'blur(16px)',
+        zIndex: 100
       }}>
         <div 
           onClick={handleBackToHome}
           style={{ 
-            fontSize: '1.3rem', 
-            fontWeight: '700', 
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
+            gap: '10px',
             userSelect: 'none'
           }}
         >
-          <span>🎮</span>
-          <span style={{
-            background: 'linear-gradient(to right, #ffd700, #a200ff)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
+          <div style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
+            background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 0 12px var(--primary-glow)',
+            fontSize: '1.1rem',
+            fontWeight: 'bold',
+            color: '#fff'
           }}>
-            Ping!
-          </span>
+            ⚡
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <span style={{
+              fontFamily: 'var(--font-tech)',
+              fontSize: '1.45rem',
+              fontWeight: '800',
+              letterSpacing: '1px',
+              background: 'linear-gradient(90deg, #00f0ff, #7000ff)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}>
+              Ping!
+            </span>
+          </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -156,34 +175,27 @@ function App() {
               onClick={() => handleSelectRole('HOST')}
               className="neon-btn"
               style={{
-                padding: '8px 16px',
-                fontSize: '0.85rem',
-                background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
-                boxShadow: '0 0 12px var(--primary-glow)',
-                borderRadius: '10px',
-                cursor: 'pointer',
-                border: 'none',
-                color: 'white',
-                fontWeight: 'bold',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
+                padding: '8px 18px',
+                fontSize: '0.85rem'
               }}
             >
-              <span>📺</span> Tạo Phòng
+              <span>🖥️</span> Quản Lý Phòng
             </button>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem' }}>
+            <div 
+              className={`cyber-badge ${isConnected ? 'success' : 'danger'}`}
+              onClick={!isConnected ? connect : undefined}
+              style={{ cursor: isConnected ? 'default' : 'pointer' }}
+              title={!isConnected ? 'Nhấp để kết nối lại máy chủ' : 'Đã kết nối thời gian thực'}
+            >
               <span style={{
-                width: '8px',
-                height: '8px',
+                width: '6px',
+                height: '6px',
                 borderRadius: '50%',
-                background: isConnected ? 'var(--color-green)' : 'var(--color-red)',
-                boxShadow: isConnected ? '0 0 8px var(--color-green)' : '0 0 8px var(--color-red)'
+                background: 'currentColor',
+                display: 'inline-block'
               }} />
-              <span style={{ color: isConnected ? 'var(--color-green)' : 'var(--color-red)', fontWeight: '500' }}>
-                {isConnected ? 'Realtime Connected' : 'Disconnected'}
-              </span>
+              {isConnected ? 'ONLINE // WS-READY' : 'OFFLINE (NHẤP ĐỂ KẾT NỐI LẠI)'}
             </div>
           )}
 
@@ -191,15 +203,15 @@ function App() {
           <button 
             onClick={toggleTheme} 
             style={{
-              background: 'transparent',
+              background: 'rgba(0, 240, 255, 0.05)',
               border: '1px solid var(--border-glass)',
-              borderRadius: '50%',
+              borderRadius: '10px',
               width: '38px',
               height: '38px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.2rem',
+              fontSize: '1.1rem',
               cursor: 'pointer',
               color: 'var(--text-primary)',
               transition: 'var(--transition-fast)',
@@ -218,13 +230,15 @@ function App() {
           <div className="glass-panel" style={{
             maxWidth: '500px',
             margin: '20px auto',
-            padding: '20px',
+            padding: '24px',
             borderColor: 'var(--color-red)',
             color: 'var(--color-red)',
             textAlign: 'center'
           }}>
-            <p><strong>Lỗi hệ thống:</strong> {error}</p>
-            <button className="neon-btn" onClick={handleBackToHome} style={{ marginTop: '15px', padding: '8px 20px', fontSize: '0.95rem' }}>
+            <p style={{ fontFamily: 'var(--font-tech)', fontSize: '1.1rem' }}>
+              <strong>⚠️ LỖI HỆ THỐNG:</strong> {error}
+            </p>
+            <button className="neon-btn" onClick={handleBackToHome} style={{ marginTop: '16px', padding: '10px 24px', fontSize: '0.9rem' }}>
               Quay Lại Trang Chủ
             </button>
           </div>
@@ -271,14 +285,22 @@ function App() {
 
       {/* Footer bản quyền */}
       <footer className="app-footer" style={{
-        padding: '16px',
-        textAlign: 'center',
+        padding: '12px 24px',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        fontFamily: 'var(--font-tech)',
         fontSize: '0.85rem',
         color: 'var(--text-muted)',
-        borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-        background: 'rgba(0, 0, 0, 0.1)'
+        borderTop: '1px solid var(--border-glass)',
+        background: 'rgba(6, 9, 19, 0.8)',
+        backdropFilter: 'blur(8px)'
       }}>
-        © 2026 Ping!. Designed for High Performance & Unlimited Players.
+        <div>© 2026 Ping! - Trò chơi Trắc nghiệm Realtime Trực tuyến</div>
+        <div style={{ display: 'flex', gap: '16px', fontSize: '0.8rem' }}>
+          <span>WS-REALTIME</span>
+          <span>HIGH PERFORMANCE</span>
+        </div>
       </footer>
     </div>
   );
